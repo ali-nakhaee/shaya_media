@@ -1,0 +1,13 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<h1>سلام. این صفحه‌ی اول است.</h1>
+<a href="{% url 'blog:post_list' %}">تمام پست‌ها</a>
+{% for post in posts %}
+    <article>
+        <time>منتشر شده در: {{ post.published_date }}</time>
+        <h2><a href="">{{ post.title }}</a></h2>
+        <p>{{ post.text|linebreaksbr }}</p>
+    </article>
+{% endfor %}
+{% endblock content %}
