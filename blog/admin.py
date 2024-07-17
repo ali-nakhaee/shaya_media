@@ -5,4 +5,4 @@ from .models import Post
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'author']
-    list_display_links = ['author', ]
+    list_display_links = ['id', 'author']

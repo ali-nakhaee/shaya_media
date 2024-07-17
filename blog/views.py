@@ -11,10 +11,10 @@ class PostList(View):
 
     def get(self, request):
         posts = Post.objects.all().order_by("-created_date")
-        context = {"posts": posts}
-        return render(request, "blog/post_list.html", context=context)
+        return render(request, "blog/post_list.html", {"posts": posts})
     
 class AddPost(View):
+    # permissions need. authentication, blogger_permission
 
     def get(self, request):
         form = PostForm()
@@ -28,3 +28,4 @@ class AddPost(View):
             post.published_date = timezone.now()
             post.save()
             return redirect('blog:post_list')
+        # else
