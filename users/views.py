@@ -25,4 +25,24 @@ class LoginPage(View):
                 login(request, user)
                 return redirect('blog:post_list')
             else:
-                 messages.error(request, 'Login failed.')
+                messages.error(request, 'ورود ناموفق. رمز عبور یا نام کاربری اشتباه است.')
+                return render(request, 'users/login.html', {'form':form})
+            
+class Logout(View):
+    def get(self, request):
+        logout(request)
+        return render(request, 'users/logged_out.html')
+    
+class Register(View):
+    """ Register a new user """
+    def get(self, request):
+        form = forms.SignupForm()
+        return render(request, 'users/register.html', {'form': form})
+    
+    def post(self, request):
+        form = forms.SignupForm(data=request.POST)
+        if form.is_valid():
+            new_user = form.save()
+            # Log the user in and then redirect to home page.
+            login(request, new_user)
+            return redirect('blog:post_list')
