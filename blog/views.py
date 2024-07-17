@@ -3,6 +3,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from .models import Post
 from .forms import PostForm
@@ -13,9 +15,9 @@ class PostList(View):
         posts = Post.objects.all().order_by("-created_date")
         return render(request, "blog/post_list.html", {"posts": posts})
     
+@method_decorator(login_required, name='dispatch')
 class AddPost(View):
     # permissions need. authentication, blogger_permission
-
     def get(self, request):
         form = PostForm()
         return render(request, 'blog/add_post.html', {'form': form})
