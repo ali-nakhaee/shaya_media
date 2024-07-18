@@ -10,7 +10,7 @@ from .models import Post
 from .forms import PostForm
 
 class PostList(View):
-
+    """ Index page for blog section """
     def get(self, request):
         posts = Post.objects.all().order_by("-created_date")
         return render(request, "blog/post_list.html", {"posts": posts})

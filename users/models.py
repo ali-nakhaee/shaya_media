@@ -1,7 +1,7 @@
 """ users.models file """
 
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
@@ -18,8 +18,27 @@ class User(AbstractUser):
         ),
         validators=[username_validator],
         error_messages={
-            "unique": _("A user with that username already exists."),
+            "unique": _("این نام کاربری قبلا ثبت شده است."),
         },
     )
     first_name = models.CharField(max_length=30, null=True)
     last_name = models.CharField(max_length=30, null=True)
+
+    VIEWER = "VIEWER"
+    BLOGGER = "BLOGGER"
+    ROLE_CHOICES = (
+        (VIEWER, "بازدیدکننده"),
+        (BLOGGER, "وبلاگ‌نویس"),
+    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=VIEWER)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.role == self.VIEWER:
+            group, created = Group.objects.get_or_create(name='viewers')
+            group.user_set.add(self)
+        elif self.role == self.BLOGGER:
+            group, created = Group.objects.get_or_create(name='bloggers')
+            group.user_set.add(self)
+
+            
