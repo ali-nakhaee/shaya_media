@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     # My apps
     "users",
     "blog",
+    "shop",
 
     # Third party apps
     "debug_toolbar",

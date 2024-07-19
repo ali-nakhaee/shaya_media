@@ -9,4 +9,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("blog/", include('blog.urls')),
     path("users/", include('users.urls')),
+    path("shop/", include('shop.urls')),
 ] + debug_toolbar_urls()
