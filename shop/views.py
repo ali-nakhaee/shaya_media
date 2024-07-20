@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 
+from .models import Price
 from .forms import TypeForm, SubjectForm, LevelForm, PriceForm
 
 class Pricing(View):
@@ -10,7 +11,11 @@ class Pricing(View):
             'subject_form': SubjectForm(),
             'price_form': PriceForm()
         }
-    context = {'forms': forms}
+    prices = Price.objects.all().order_by('type__type')
+    context = {
+        'forms': forms,
+        'prices': prices,
+        }
 
     def get(self, request):
         return render(request, "shop/pricing.html", self.context)
