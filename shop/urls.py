@@ -6,5 +6,5 @@ from . import views
 
 app_name = 'shop'
 urlpatterns = [
-    # path('/make_models', ),
+    path('pricing/', views.Pricing.as_view(), name='pricing'),
 ]

@@ -1,0 +1,53 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+
+<div class="row g-3">
+<div class="col-md-4 mx-auto">
+<h1>نوع:</h1>
+<form method="POST" class="post-form">
+    {% csrf_token %}
+    {{ forms.type_form.as_p }}
+    <button type="submit" name="type_form" class="save btn btn-secondary">ذخیره</button>
+</form></div>
+
+<div class="col-md-4 mx-auto">
+<h1>سطح:</h1>
+<form method="POST" class="post-form">
+    {% csrf_token %}
+    {{ forms.level_form.as_p }}
+    <button type="submit" name="level_form" class="save btn btn-secondary">ذخیره</button>
+</form></div>
+</div>
+<hr>
+
+<div class="row g-3">
+<div class="col-md-4 mx-auto">
+<h1>موضوع:</h1>
+<form method="POST" class="post-form">
+    {% csrf_token %}
+    {{ forms.subject_form.as_p }}
+    <button type="submit" name="subject_form" class="save btn btn-secondary">ذخیره</button>
+</form></div>
+
+<div class="col-md-4 mx-auto">
+<h1>قیمت‌گذاری:</h1>
+<form method="POST" class="post-form">
+    {% csrf_token %}
+    {{ forms.price_form.as_p }}
+    <button type="submit" name="price_form" class="save btn btn-secondary">ذخیره</button>
+</form></div>
+</div>
+
+
+
+
+    <!--{% for form in forms %}
+    <form method="POST" class="post-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-secondary">ذخیره</button>
+    </form>
+    {% endfor %}-->
+
+{% endblock content %}
