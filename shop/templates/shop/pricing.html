@@ -14,7 +14,7 @@
 <form method="POST" class="post-form">
     {% csrf_token %}
     {{ forms.type_form.as_p }}
-    <button type="submit" name="type_form" class="save btn btn-secondary">ذخیره</button>
+    <button type="submit" name="type_form" class="save btn btn-secondary">اضافه کردن</button>
 </form></div>
 
 <div class="col-md-4 mx-auto">
@@ -22,7 +22,7 @@
 <form method="POST" class="post-form">
     {% csrf_token %}
     {{ forms.level_form.as_p }}
-    <button type="submit" name="level_form" class="save btn btn-secondary">ذخیره</button>
+    <button type="submit" name="level_form" class="save btn btn-secondary">اضافه کردن</button>
 </form></div>
 
 <div class="col-md-4 mx-auto">
@@ -30,7 +30,7 @@
 <form method="POST" class="post-form">
     {% csrf_token %}
     {{ forms.subject_form.as_p }}
-    <button type="submit" name="subject_form" class="save btn btn-secondary">ذخیره</button>
+    <button type="submit" name="subject_form" class="save btn btn-secondary">اضافه کردن</button>
 </form></div>
 </div>
 <hr>
@@ -50,7 +50,7 @@
     {{ forms.price_form.max_range.as_field_group }}<br>
     {{ forms.price_form.price.as_field_group }}
 
-    <button type="submit" name="price_form" class="save btn btn-secondary">ذخیره</button>
+    <button type="submit" name="price_form" class="save btn btn-secondary">اضافه کردن</button>
 </form></div>
 </div>
 
