@@ -51,7 +51,9 @@ class Pricing(View):
         elif 'price_form' in request.POST:
             form = PriceForm(request.POST)
             if form.is_valid():
-                form.save()
+                new_price = form.save(commit=False)
+                new_price.type = new_price.subject.type
+                new_price.save()
                 return render(request, "shop/pricing.html", self.context)
             return self.invalid_form(request, 'price_form', form)
         
