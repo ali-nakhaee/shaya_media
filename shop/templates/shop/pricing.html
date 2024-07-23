@@ -8,6 +8,21 @@
 
 {% block content %}
 
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <div class="container-fluid p-0">
+    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert" >
+      <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="True">&times;</span>
+      </button>
+      {{ message }}
+    </div>
+  </div>
+  {% endfor %}
+</ul>
+{% endif %}
+
 <div class="row g-3">
 <div class="col-md-4 mx-auto">
 <h3>نوع:</h3>
@@ -75,25 +90,6 @@
       </div>
     </div>
 
-
-    <!--<div class="card" style="width: 18rem;">
-        <div class="card-body">
-        <h5 class="card-title">{{ price.subject }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ price.level }}</h6>
-        <p class="card-body">
-          {{ price.min_range }}
-          {{ price.max_range }}
-          {{ price.price }}
-        </p>
-      </div>
-    </div>-->
-
-    <!--<h4>{{ price.type }}</h4>
-    <h4>{{ price.subject }}</h4>
-    <h4>{{ price.level }}</h4>
-    <h4>{{ price.min_range }}</h4>
-    <h4>{{ price.max_range }}</h4>
-    <h4>{{ price.price }}</h4>-->
 {% endfor %}
 </div>
 

@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from django.http import Http404
+from django.contrib import messages
 
 from .models import Price
 from .forms import TypeForm, SubjectForm, LevelForm, PriceForm
@@ -15,7 +16,7 @@ class Pricing(View):
                 'subject_form': SubjectForm(),
                 'price_form': PriceForm(),
             }
-        prices = Price.objects.all().order_by('type__type').order_by('subject__subject').order_by('level__level_num')
+        prices = Price.objects.all().order_by('type__type', 'subject__subject', 'level__level_num', 'min_range')
         self.context = {
             'forms': forms,
             'prices': prices,
@@ -78,6 +79,12 @@ class EditPrice(View):
         form = PriceForm(instance=price)
         return render(request, "shop/edit_price.html", {'form': form})
         
-
+    def post(self, request, price_id):
+        price = self.get_model(price_id)
+        form = PriceForm(instance=price, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'قیمت با موفقیت تغییر کرد.')
+        return redirect("shop:pricing")
 
 
