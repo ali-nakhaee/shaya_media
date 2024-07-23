@@ -41,7 +41,7 @@
 <form method="POST" class="post-form">
     {% csrf_token %}
     <!--{{ forms.price_form.as_p }}-->
-    {{ forms.price_form.type.as_field_group }}<br>
+    <!--{{ forms.price_form.type.as_field_group }}<br>-->
     {{ forms.price_form.subject.as_field_group }}<br>
     {{ forms.price_form.level.as_field_group }}
 </div>
@@ -55,6 +55,9 @@
 </div>
 
 <hr>
+<div class="mx-auto text-center">
+    <h2>قیمت‌ها</h2>
+  </div>
 {% for price in prices %}
     <h4>{{ price }}</h4>
 {% endfor %}
