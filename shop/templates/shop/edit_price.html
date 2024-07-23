@@ -1,0 +1,15 @@
+{% extends "blog/base.html" %}
+
+{% block page_header %}
+<div class="mx-auto text-center">
+  <h2>تغییر قیمت</h2>
+</div>
+{% endblock page_header %}
+
+{% block content %}
+<form method="POST" class="post-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" name="price_form" class="save btn btn-secondary">اعمال تغییر</button>
+</form>
+{% endblock content %}

@@ -58,8 +58,43 @@
 <div class="mx-auto text-center">
     <h2>قیمت‌ها</h2>
   </div>
+
+<div class="row">
 {% for price in prices %}
-    <h4>{{ price }}</h4>
+<div class="col-sm-3 mt-3">
+    <div class="card">
+        <div class="card-header text-center">
+          {{ price.subject }}
+        </div>
+        <div class="card-body text-center">
+          <h6 class="card-title">{{ price.level }}</h6>
+          <h6 class="card-text">{{ price.min_range }} - {{ price.max_range }} {{ price.type.unit }}</h6>
+          <h6 class="card-text">{{ price.price }} تومان</h6>
+          <a href="{% url 'shop:edit_price' price.id %}" class="btn btn-primary">تغییر قیمت</a>
+        </div>
+      </div>
+    </div>
+
+
+    <!--<div class="card" style="width: 18rem;">
+        <div class="card-body">
+        <h5 class="card-title">{{ price.subject }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ price.level }}</h6>
+        <p class="card-body">
+          {{ price.min_range }}
+          {{ price.max_range }}
+          {{ price.price }}
+        </p>
+      </div>
+    </div>-->
+
+    <!--<h4>{{ price.type }}</h4>
+    <h4>{{ price.subject }}</h4>
+    <h4>{{ price.level }}</h4>
+    <h4>{{ price.min_range }}</h4>
+    <h4>{{ price.max_range }}</h4>
+    <h4>{{ price.price }}</h4>-->
 {% endfor %}
+</div>
 
 {% endblock content %}

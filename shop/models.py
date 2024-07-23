@@ -29,8 +29,8 @@ class Price(models.Model):
     type = models.ForeignKey(Type, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     level = models.ForeignKey(Level, on_delete=models.CASCADE)
-    min_range = models.IntegerField()   # Minimum value for this price range based on Type.unit
-    max_range = models.IntegerField()   # Maximum value for this price range based on Type.unit
+    min_range = models.IntegerField(default=0)   # Minimum value for this price range based on Type.unit
+    max_range = models.IntegerField(default=9999)   # Maximum value for this price range based on Type.unit
     price = models.IntegerField()
 
     def __str__(self):
