@@ -87,4 +87,5 @@ class EditPrice(View):
             messages.success(request, 'قیمت با موفقیت تغییر کرد.')
         return redirect("shop:pricing")
 
-
+class Cart(View):
+    pass
