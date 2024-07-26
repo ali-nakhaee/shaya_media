@@ -1,0 +1,18 @@
+{% extends "blog/base.html" %}
+
+{% block page_header %}
+<div class="mx-auto text-center">
+  <h2>سبد سفارش</h2>
+</div>
+{% endblock page_header %}
+
+{% block content %}
+<form method="POST" class="post-form">
+    {% csrf_token %}
+    {{ formset.management_form }}
+        {% for form in formset %}
+            {{ form.as_p }}
+        {% endfor %}
+    <button type="submit" name="cart_form" class="save btn btn-secondary">ثبت سفارش</button>
+</form>
+{% endblock content %}

@@ -3,8 +3,8 @@ from django.views import View
 from django.http import Http404
 from django.contrib import messages
 
-from .models import Price
-from .forms import TypeForm, SubjectForm, LevelForm, PriceForm
+from .models import Price, Order, Item
+from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemForm, ItemFormSet
 
 class Pricing(View):
 
@@ -88,4 +88,26 @@ class EditPrice(View):
         return redirect("shop:pricing")
 
 class Cart(View):
-    pass
+    def get(self, request):
+        formset = ItemFormSet(queryset=Item.objects.none())
+        # form = ItemForm()
+        return render(request, "shop/cart.html", {'formset': formset})
+
+    def post(self, request):
+        form = ItemForm(data=request.POST)
+        if form.is_valid():
+            new_item = form.save(commit=False)
+            new_item.type = new_item.subject.type
+            price = Price.objects.filter(
+                type=new_item.type,
+                subject=new_item.subject,
+                level=new_item.level,
+                min_range__lte=new_item.number,
+                max_range__gte=new_item.number,
+                is_available=True,
+            ).first().price
+            new_item.item_price = price * new_item.number
+            new_item.order = Order.objects.get(id=1)
+            new_item.save()
+            messages.success(request, 'سفارش شما ایجاد شد.')
+        return redirect("shop:pricing")

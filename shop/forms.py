@@ -2,7 +2,7 @@
 
 from django import forms
 
-from .models import Type, Subject, Level, Price
+from .models import Type, Subject, Level, Price, Item
 
 class TypeForm(forms.ModelForm):
     class Meta:
@@ -42,3 +42,10 @@ class PriceForm(forms.ModelForm):
             'max_range': 'پایان محدوده',
             'price': 'قیمت',
         }
+
+class ItemForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = ('subject', 'level', 'number')
+
+ItemFormSet = forms.modelformset_factory(Item, fields=('subject', 'level', 'number'), extra=1)
