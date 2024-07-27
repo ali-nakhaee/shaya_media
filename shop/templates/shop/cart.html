@@ -7,12 +7,41 @@
 {% endblock page_header %}
 
 {% block content %}
-<form method="POST" class="post-form">
+<form id="form-container" method="POST" class="post-form">
     {% csrf_token %}
     {{ formset.management_form }}
         {% for form in formset %}
+        <div class="item-form">
             {{ form.as_p }}
+        </div>
         {% endfor %}
+    <button id="add-form" type="button" class="save btn btn-secondary">اضافه کردن آیتم</button>
     <button type="submit" name="cart_form" class="save btn btn-secondary">ثبت سفارش</button>
 </form>
+
+<script>
+// from https://www.brennantymrak.com/articles/django-dynamic-formsets-javascript tutorial
+
+    let itemForm = document.querySelectorAll(".item-form")
+    let container = document.querySelector("#form-container")
+    let addButton = document.querySelector("#add-form")
+    let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+
+    let formNum = itemForm.length-1
+    addButton.addEventListener('click', addForm)
+    // console.log(itemForm);
+    function addForm(e){
+        e.preventDefault()
+
+        let newForm = itemForm[0].cloneNode(true)
+        let formRegex = RegExp(`form-(\\d){1}-`,'g')
+
+        formNum++
+        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
+        container.insertBefore(newForm, addButton)
+        
+        totalForms.setAttribute('value', `${formNum+1}`)
+    }
+</script>
+
 {% endblock content %}
