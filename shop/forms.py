@@ -48,4 +48,13 @@ class ItemForm(forms.ModelForm):
         model = Item
         fields = ('subject', 'level', 'number')
 
-ItemFormSet = forms.modelformset_factory(Item, fields=('subject', 'level', 'number'), extra=1)
+ItemFormSet = forms.modelformset_factory(Item,
+                                         fields=('subject', 'level', 'number'),
+                                         extra=1,
+                                         widgets={
+                                             'subject': forms.Select(attrs={'required': 'required'}),
+                                             'level': forms.Select(attrs={'required': 'required'}),
+                                             'number': forms.NumberInput(attrs={'required': 'required'}),
+                                             },
+                                        )
+                                          

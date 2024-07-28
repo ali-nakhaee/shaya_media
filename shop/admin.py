@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Price, Type, Subject, Level, Item
+from .models import Price, Type, Subject, Level, Item, Order
 
 @admin.register(Price)
 class PriceAdmin(admin.ModelAdmin):
@@ -26,4 +26,9 @@ class LevelAdmin(admin.ModelAdmin):
 class ItemAdmin(admin.ModelAdmin):
     list_display = ['id', 'type', 'level', 'subject', 'order', 'number', 'item_price']
     list_display_links = ['id', 'type', 'level', 'subject', 'order']
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'buyer', 'purchase_date']
+    list_display_links = ['id', 'buyer', 'purchase_date']
 

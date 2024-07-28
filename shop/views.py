@@ -90,24 +90,26 @@ class EditPrice(View):
 class Cart(View):
     def get(self, request):
         formset = ItemFormSet(queryset=Item.objects.none())
-        # form = ItemForm()
         return render(request, "shop/cart.html", {'formset': formset})
 
     def post(self, request):
-        form = ItemForm(data=request.POST)
-        if form.is_valid():
-            new_item = form.save(commit=False)
-            new_item.type = new_item.subject.type
-            price = Price.objects.filter(
-                type=new_item.type,
-                subject=new_item.subject,
-                level=new_item.level,
-                min_range__lte=new_item.number,
-                max_range__gte=new_item.number,
-                is_available=True,
-            ).first().price
-            new_item.item_price = price * new_item.number
-            new_item.order = Order.objects.get(id=1)
-            new_item.save()
+        formset = ItemFormSet(data=request.POST)
+        if formset.is_valid():
+            order = Order.objects.create(buyer=request.user)
+            for form in formset:
+                if form.is_valid():
+                    new_item = form.save(commit=False)
+                    new_item.type = new_item.subject.type
+                    price = Price.objects.filter(
+                        type=new_item.type,
+                        subject=new_item.subject,
+                        level=new_item.level,
+                        min_range__lte=new_item.number,
+                        max_range__gte=new_item.number,
+                        is_available=True,
+                    ).first().price
+                    new_item.item_price = price * new_item.number
+                    new_item.order = order
+                    new_item.save()
             messages.success(request, 'سفارش شما ایجاد شد.')
         return redirect("shop:pricing")
