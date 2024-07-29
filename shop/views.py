@@ -4,7 +4,7 @@ from django.http import Http404
 from django.contrib import messages
 
 from .models import Price, Order, Item
-from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemForm, ItemFormSet
+from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemFormSet
 
 class Pricing(View):
 
@@ -95,7 +95,8 @@ class Cart(View):
     def post(self, request):
         formset = ItemFormSet(data=request.POST)
         if formset.is_valid():
-            order = Order.objects.create(buyer=request.user)
+            order = Order.objects.create(buyer=request.user, price=0)
+            order_price = 0
             for form in formset:
                 if form.is_valid():
                     new_item = form.save(commit=False)
@@ -111,11 +112,14 @@ class Cart(View):
                     new_item.item_price = price * new_item.number
                     new_item.order = order
                     new_item.save()
+                    order_price += new_item.item_price
+            order.price = order_price
+            order.save()
             messages.success(request, 'سفارش شما ایجاد شد.')
         return redirect("shop:orders")
     
 class Orders(View):
     def get(self, request):
-        orders = Order.objects.filter(buyer=request.user)
+        orders = Order.objects.filter(buyer=request.user).order_by('-purchase_date')
         return render(request, 'shop/orders.html', {'orders': orders})
     

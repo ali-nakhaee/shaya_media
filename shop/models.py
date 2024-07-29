@@ -1,3 +1,5 @@
+from decouple import config
+
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -48,6 +50,15 @@ class Price(models.Model):
 class Order(models.Model):
     buyer = models.ForeignKey(User, on_delete=models.PROTECT)
     purchase_date = models.DateTimeField(default=timezone.now)
+    tracking_code = models.IntegerField(null=True)
+    price = models.IntegerField()
+    
+
+    def save(self, *args, **kwargs):
+        self.tracking_code = 1
+        super().save(*args, **kwargs)
+        tracking_code = int(str(self.id * int(config('multiplication_value'))), base=int(config('base_value'))) + int(config('addition_value'))
+        Order.objects.filter(id=self.id).update(tracking_code=tracking_code)
 
 
 class Item(models.Model):
