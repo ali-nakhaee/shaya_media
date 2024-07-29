@@ -1,0 +1,50 @@
+{% extends "blog/base.html" %}
+
+{% block page_header %}
+<div class="mx-auto text-center">
+  <h2>تمام سفارش‌ها</h2>
+</div>
+{% endblock page_header %}
+
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <div class="container-fluid p-0">
+    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert" >
+      <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="True">&times;</span>
+      </button>
+      {{ message }}
+    </div>
+  </div>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<div class="accordion" id="accordionExample">
+    {% for order in orders %}
+    <div class="accordion-item">
+    <h2 class="accordion-header" id="heading-{{ forloop.counter }}">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse-{{ forloop.counter }}">
+            شماره سفارش، تاریخ، وضعیت
+        </button>
+    </h2>
+    <div id="collapse-{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ forloop.counter }}" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+        {% for item in order.items.all %}
+        <div class="row">
+            <div class="col-1">{{ forloop.counter }}</div>
+            <div class="col">نوع: {{ item.subject }}</div>
+            <div class="col">سطح: {{ item.level }}</div>
+            <div class="col">{{ item.number }} {{ item.type.unit }}</div>
+            <div class="col">{{ item.item_price }} تومان</div>
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

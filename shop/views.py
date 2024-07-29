@@ -112,4 +112,10 @@ class Cart(View):
                     new_item.order = order
                     new_item.save()
             messages.success(request, 'سفارش شما ایجاد شد.')
-        return redirect("shop:pricing")
+        return redirect("shop:orders")
+    
+class Orders(View):
+    def get(self, request):
+        orders = Order.objects.filter(buyer=request.user)
+        return render(request, 'shop/orders.html', {'orders': orders})
+    

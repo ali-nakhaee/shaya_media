@@ -27,8 +27,13 @@ class ItemAdmin(admin.ModelAdmin):
     list_display = ['id', 'type', 'level', 'subject', 'order', 'number', 'item_price']
     list_display_links = ['id', 'type', 'level', 'subject', 'order']
 
+class ItemInline(admin.TabularInline):
+    model = Item
+    extra = 0
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'buyer', 'purchase_date']
     list_display_links = ['id', 'buyer', 'purchase_date']
+    inlines = [ItemInline, ]
 
