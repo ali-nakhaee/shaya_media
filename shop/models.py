@@ -52,7 +52,21 @@ class Order(models.Model):
     purchase_date = models.DateTimeField(default=timezone.now)
     tracking_code = models.IntegerField(null=True)
     price = models.IntegerField()
+
+    PENDING = "در حال بررسی"
+    ACCEPTED = "پذیرفته شده"
+    DOING = "در حال انجام"
+    FINISHED = "به اتمام رسیده"
+    REJECTED = "رد شده"
     
+    STATUS_CHOICES = (
+        (PENDING, "در حال بررسی"),
+        (ACCEPTED, "پذیرفته شده"),
+        (DOING, "در حال انجام"),
+        (FINISHED, "به اتمام رسیده"),
+        (REJECTED, "رد شده"),
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
 
     def save(self, *args, **kwargs):
         self.tracking_code = 1

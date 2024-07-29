@@ -28,12 +28,50 @@
     <div class="accordion-item">
     <h2 class="accordion-header" id="heading-{{ forloop.counter }}">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse-{{ forloop.counter }}">
-                <div class="col-9">
+            <div class="container">
+                <div class="row">
+                <div class="col-sm-5">
                     <strong>کد سفارش: MM-{{ order.tracking_code }}</strong>
                 </div>
-                <div class="col-2">
-                    وضعیت: status
+                {% if order.status == "در حال بررسی" %}
+                    {% with status="bg-warning text-dark" %}
+                    <div class="col-sm-7 text-end">
+                        <span class="badge {{status}}">وضعیت: {{ order.status }}</span>
+                    </div>
+                    {% endwith %}
+                {% elif order.status == "پذیرفته شده" %}
+                    {% with status="bg-primary" %}
+                    <div class="col-sm-7 text-end">
+                        <span class="badge {{status}}">وضعیت: {{ order.status }}</span>
+                    </div>
+                    {% endwith %}
+                {% elif order.status == "در حال انجام" %}
+                    {% with status="bg-info text-dark" %}
+                    <div class="col-sm-7 text-end">
+                        <span class="badge {{status}}">وضعیت: {{ order.status }}</span>
+                    </div>
+                    {% endwith %}
+                {% elif order.status == "به اتمام رسیده" %}
+                    {% with status="bg-success" %}
+                    <div class="col-sm-7 text-end">
+                        <span class="badge {{status}}">وضعیت: {{ order.status }}</span>
+                    </div>
+                    {% endwith %}
+                {% elif order.status == "رد شده" %}
+                    {% with status="bg-danger" %}
+                    <div class="col-sm-7 text-end">
+                        <span class="badge {{status}}">وضعیت: {{ order.status }}</span>
+                    </div>
+                    {% endwith %}
+                {% else %}
+                    {% with status="bg-secondary" %}
+                    <div class="col-sm-7 text-end">
+                        <span class="badge {{status}}">وضعیت: {{ order.status }}</span>
+                    </div>
+                    {% endwith %}
+                {% endif %}
                 </div>
+            </div>
         </button>
     </h2>
     <div id="collapse-{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ forloop.counter }}" data-bs-parent="#accordionExample">
