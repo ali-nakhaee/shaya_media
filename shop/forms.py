@@ -56,5 +56,10 @@ ItemFormSet = forms.modelformset_factory(Item,
                                              'level': forms.Select(attrs={'required': 'required'}),
                                              'number': forms.NumberInput(attrs={'required': 'required'}),
                                              },
+                                         labels={
+                                             'subject': 'نوع - موضوع',
+                                             'level': 'سطح',
+                                             'number': 'تعداد',
+                                         }
                                         )
                                           
