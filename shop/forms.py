@@ -43,10 +43,6 @@ class PriceForm(forms.ModelForm):
             'price': 'قیمت',
         }
 
-class ItemForm(forms.ModelForm):
-    class Meta:
-        model = Item
-        fields = ('subject', 'level', 'number')
 
 ItemFormSet = forms.modelformset_factory(Item,
                                          fields=('subject', 'level', 'number'),
@@ -63,3 +59,11 @@ ItemFormSet = forms.modelformset_factory(Item,
                                          }
                                         )
                                           
+
+class ItemForm(forms.Form):
+    type = forms.CharField(max_length=50)
+    subject = forms.CharField(max_length=50)
+    level = forms.CharField(max_length=50)
+    number = forms.IntegerField()
+    
+
