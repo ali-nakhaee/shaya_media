@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.http import Http404
 from django.contrib import messages
+from django.forms import formset_factory
 
 from .models import Price, Order, Item
-from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemFormSet
+from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemFormSet, ItemForm
 
 class Pricing(View):
 
@@ -89,7 +90,8 @@ class EditPrice(View):
 
 class Cart(View):
     def get(self, request):
-        formset = ItemFormSet(queryset=Item.objects.none())
+        # formset = ItemFormSet(queryset=Item.objects.none())
+        formset = formset_factory(ItemForm, extra=1)
         return render(request, "shop/cart.html", {'formset': formset})
 
     def post(self, request):
