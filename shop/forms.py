@@ -61,9 +61,9 @@ ItemFormSet = forms.modelformset_factory(Item,
                                           
 
 class ItemForm(forms.Form):
-    type = forms.CharField(max_length=50)
-    subject = forms.CharField(max_length=50)
-    level = forms.CharField(max_length=50)
-    number = forms.IntegerField()
+    type = forms.CharField(max_length=50, label='نوع')
+    subject = forms.CharField(max_length=50, label='موضوع')
+    level = forms.CharField(max_length=50, label='سطح')
+    number = forms.IntegerField(help_text=' ', label='تعداد')
     
 

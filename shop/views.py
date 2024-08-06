@@ -4,7 +4,7 @@ from django.http import Http404
 from django.contrib import messages
 from django.forms import formset_factory
 
-from .models import Price, Order, Item
+from .models import Price, Order, Item, Type
 from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemFormSet, ItemForm
 
 class Pricing(View):
@@ -92,7 +92,16 @@ class Cart(View):
     def get(self, request):
         # formset = ItemFormSet(queryset=Item.objects.none())
         formset = formset_factory(ItemForm, extra=1)
-        return render(request, "shop/cart.html", {'formset': formset})
+        units = {}
+        for type in Type.objects.filter(is_available=True):
+            units[str(type.type)] = str(type.unit)
+        context = {
+            'formset': formset,
+            'units': units,
+        }
+        for unit in units:
+            print(f"{unit}: {units[unit]}")
+        return render(request, "shop/cart.html", context)
 
     def post(self, request):
         formset = ItemFormSet(data=request.POST)

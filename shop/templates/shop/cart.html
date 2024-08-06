@@ -49,6 +49,17 @@
         if(this.value == '1') {
             document.getElementById("id_form-0-subject").disabled = true;
         }
+        else {
+            document.getElementById("id_form-0-subject").disabled = false;
+        }
+        for (let x in {{ units|safe }}) {
+            // console.log(x)
+            if(this.value == x) {
+                console.log({{ units|safe }}[x]);
+                document.getElementById("id_form-0-number_helptext").innerHTML = {{ units|safe }}[x];
+            }
+        }
+        // console.log('changed')
     }
 </script>
 
