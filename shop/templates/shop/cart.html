@@ -53,11 +53,20 @@
             document.getElementById("id_form-0-subject").disabled = false;
         }
         for (let x in {{ units|safe }}) {
-            // console.log(x)
-            if(this.value == x) {
+            console.log(this.options[this.selectedIndex].text)
+            if(this.options[this.selectedIndex].text == x) {
                 console.log({{ units|safe }}[x]);
                 document.getElementById("id_form-0-number_helptext").innerHTML = {{ units|safe }}[x];
             }
+        }
+
+        let subjects = {{ subjects|safe }}[this.options[this.selectedIndex]];
+        select = document.getElementById("id_form-0-subject");
+        for (let i=0; i < subjects.length; i++) {
+            var opt = document.createElement('option');
+            opt.value = i;
+            opt.innerHTML = {{ subjects|safe }}[i];
+            select.appendChild(opt);
         }
         // console.log('changed')
     }
