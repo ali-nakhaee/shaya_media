@@ -46,12 +46,7 @@
     }
 
     document.getElementById("id_form-0-type").onchange = function () {
-        if(this.value == '1') {
-            document.getElementById("id_form-0-subject").disabled = true;
-        }
-        else {
-            document.getElementById("id_form-0-subject").disabled = false;
-        }
+        // change unit helptext
         for (let x in {{ units|safe }}) {
             console.log(this.options[this.selectedIndex].text)
             if(this.options[this.selectedIndex].text == x) {
@@ -60,15 +55,21 @@
             }
         }
 
-        let subjects = {{ subjects|safe }}[this.options[this.selectedIndex]];
+        // delete options from subject select field
         select = document.getElementById("id_form-0-subject");
-        for (let i=0; i < subjects.length; i++) {
+        for (var i = select.length - 1; i >= 0; i--) {
+            select.remove(i);
+        }
+
+        // add new options to subject select field
+        let subjects = {{ subjects|safe }}[this.options[this.selectedIndex].text];
+        console.log({{ subjects|safe }}['تدوین'])
+        for (var i=0; i < subjects.length; i++) {
             var opt = document.createElement('option');
             opt.value = i;
-            opt.innerHTML = {{ subjects|safe }}[i];
+            opt.innerHTML = subjects[i];
             select.appendChild(opt);
         }
-        // console.log('changed')
     }
 </script>
 
