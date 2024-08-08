@@ -55,8 +55,7 @@
         }
 
         // add new options to subject select field
-        let subjects = {{ subjects|safe }}[this.options[this.selectedIndex].text];
-        console.log({{ subjects|safe }}['تدوین'])
+        let subjects = {{ subjects|safe }}[this.value];
         for (var i=0; i < subjects.length; i++) {
             var opt = document.createElement('option');
             opt.value = i;
@@ -64,17 +63,11 @@
             select.appendChild(opt);
         }
     }
-    
+
     typeField.addEventListener('change', changeUnitHelptext)
     function changeUnitHelptext() {
         // change unit helptext
-        for (let x in {{ units|safe }}) {
-            console.log(this.options[this.selectedIndex].text)
-            if(this.options[this.selectedIndex].text == x) {
-                console.log({{ units|safe }}[x]);
-                document.getElementById("id_form-0-number_helptext").innerHTML = {{ units|safe }}[x];
-            }
-        }
+        document.getElementById("id_form-0-number_helptext").innerHTML = {{ units|safe }}[this.value];
     }
 </script>
 

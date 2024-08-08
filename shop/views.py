@@ -95,8 +95,8 @@ class Cart(View):
         units = {}
         subjects = {}
         for type in Type.objects.filter(is_available=True):
-            units[str(type.type)] = str(type.unit)
-            subjects[str(type.type)] = list(Subject.objects.filter(type=type).values_list('subject', flat=True))
+            units[str(type.id)] = str(type.unit)
+            subjects[str(type.id)] = list(Subject.objects.filter(type=type).values_list('subject', flat=True))
 
         context = {
             'formset': formset,
