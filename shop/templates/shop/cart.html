@@ -45,16 +45,9 @@
         // console.log(totalForms.value);
     }
 
-    document.getElementById("id_form-0-type").onchange = function () {
-        // change unit helptext
-        for (let x in {{ units|safe }}) {
-            console.log(this.options[this.selectedIndex].text)
-            if(this.options[this.selectedIndex].text == x) {
-                console.log({{ units|safe }}[x]);
-                document.getElementById("id_form-0-number_helptext").innerHTML = {{ units|safe }}[x];
-            }
-        }
-
+    let typeField = document.getElementById("id_form-0-type")
+    typeField.addEventListener('change', changeSubjectField)
+    function changeSubjectField() {
         // delete options from subject select field
         select = document.getElementById("id_form-0-subject");
         for (var i = select.length - 1; i >= 0; i--) {
@@ -69,6 +62,18 @@
             opt.value = i;
             opt.innerHTML = subjects[i];
             select.appendChild(opt);
+        }
+    }
+    
+    typeField.addEventListener('change', changeUnitHelptext)
+    function changeUnitHelptext() {
+        // change unit helptext
+        for (let x in {{ units|safe }}) {
+            console.log(this.options[this.selectedIndex].text)
+            if(this.options[this.selectedIndex].text == x) {
+                console.log({{ units|safe }}[x]);
+                document.getElementById("id_form-0-number_helptext").innerHTML = {{ units|safe }}[x];
+            }
         }
     }
 </script>
