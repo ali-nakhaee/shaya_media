@@ -11,9 +11,16 @@
     {% csrf_token %}
     {{ formset.management_form }}
         {% for form in formset %}
-        <div class="item-form">
-            {{ form.as_p }}
-            <hr>
+        <div class="row">
+            <div class="col-6">
+            <div class="item-form">
+                {{ form.as_p }}
+            </div>
+            </div>
+            <div class="col-6">
+                <div id="price-table-{{ forloop.counter0 }}">
+                </div>
+            </div>
         </div>
         {% endfor %}
     <button id="add-form" type="button" class="save btn btn-secondary">اضافه کردن آیتم</button>
@@ -58,8 +65,8 @@
         let subjects = {{ subjects|safe }}[this.value];
         for (var i=0; i < subjects.length; i++) {
             var opt = document.createElement('option');
-            opt.value = i;
-            opt.innerHTML = subjects[i];
+            opt.value = subjects[i];
+            opt.innerHTML = {{ subject_ids|safe }}[subjects[i]];
             select.appendChild(opt);
         }
     }
@@ -68,6 +75,25 @@
     function changeUnitHelptext() {
         // change unit helptext
         document.getElementById("id_form-0-number_helptext").innerHTML = {{ units|safe }}[this.value];
+    }
+
+    let levelField = document.getElementById("id_form-0-level")
+    levelField.addEventListener('change', createPriceTable)
+    function createPriceTable() {
+        const tbl = document.createElement("table");
+        tbl.classList.add("table")
+        tbl.classList.add("table-dark")
+        for (let i = 0; i < 3; i++) {
+            const tr = tbl.insertRow();
+            for (let j = 0; j < 2; j++) {
+                const td = tr.insertCell();
+                td.appendChild(document.createTextNode(`Cell I${i}/J${j}`));
+            }
+        }
+        const priceTable = document.getElementById("price-table-0");
+        priceTable.innerHTML = "";
+        console.log(priceTable)
+        priceTable.append(tbl);
     }
 </script>
 

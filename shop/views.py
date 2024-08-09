@@ -94,14 +94,19 @@ class Cart(View):
         formset = formset_factory(ItemForm, extra=1)
         units = {}
         subjects = {}
+        subject_ids = {}
         for type in Type.objects.filter(is_available=True):
             units[str(type.id)] = str(type.unit)
-            subjects[str(type.id)] = list(Subject.objects.filter(type=type).values_list('subject', flat=True))
-
+            subjects[str(type.id)] = list(Subject.objects.filter(type=type).values_list('id', flat=True))
+        
+        for subject in Subject.objects.filter(is_available=True):
+            subject_ids[str(subject.id)] = str(subject.subject)
+        
         context = {
             'formset': formset,
             'units': units,
             'subjects': subjects,
+            'subject_ids': subject_ids,
         }
         # for unit in units:
         #     print(f"{unit}: {units[unit]}")
