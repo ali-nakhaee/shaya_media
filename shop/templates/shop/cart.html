@@ -12,12 +12,12 @@
     {{ formset.management_form }}
         {% for form in formset %}
         <div class="row">
-            <div class="col-6">
+            <div class="col-md-6">
             <div class="item-form">
                 {{ form.as_p }}
             </div>
             </div>
-            <div class="col-6">
+            <div class="col-md-6">
                 <div id="price-table-{{ forloop.counter0 }}">
                 </div>
             </div>
@@ -78,21 +78,36 @@
     }
 
     let levelField = document.getElementById("id_form-0-level")
+    let subjectField = document.getElementById("id_form-0-subject")
+    typeField.addEventListener('change', createPriceTable)
+    subjectField.addEventListener('change', createPriceTable)
     levelField.addEventListener('change', createPriceTable)
     function createPriceTable() {
         const tbl = document.createElement("table");
         tbl.classList.add("table")
-        tbl.classList.add("table-dark")
-        for (let i = 0; i < 3; i++) {
-            const tr = tbl.insertRow();
-            for (let j = 0; j < 2; j++) {
-                const td = tr.insertCell();
-                td.appendChild(document.createTextNode(`Cell I${i}/J${j}`));
-            }
+        // tbl.classList.add("table-striped")
+        let subject_id = document.getElementById("id_form-0-subject").value;
+        let level_id = document.getElementById("id_form-0-level").value;
+        let prices = {{ prices|safe }}[subject_id][level_id];
+        let unit = document.getElementById("id_form-0-number_helptext").textContent;
+        console.log(prices)
+        const header = tbl.createTHead();
+        const thead = header.insertRow();
+        const cell1 = thead.insertCell();
+        cell1.textContent = "محدوده‌ی سفارش";
+        const cell2 = thead.insertCell();
+        cell2.textContent = "قیمت هر " + unit;
+        const tableBody = tbl.createTBody();
+        for (let price in prices) {
+            const tr = tableBody.insertRow();
+            const td1 = tr.insertCell();
+            td1.textContent = "بین " + prices[price][0] + " تا " + prices[price][1] + " " + unit;
+            td1.classList.add("table-secondary");
+            const td2 = tr.insertCell();
+            td2.textContent = prices[price][2] + " تومان";
         }
         const priceTable = document.getElementById("price-table-0");
         priceTable.innerHTML = "";
-        console.log(priceTable)
         priceTable.append(tbl);
     }
 </script>

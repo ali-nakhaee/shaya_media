@@ -95,18 +95,29 @@ class Cart(View):
         units = {}
         subjects = {}
         subject_ids = {}
+        prices = {}
         for type in Type.objects.filter(is_available=True):
             units[str(type.id)] = str(type.unit)
             subjects[str(type.id)] = list(Subject.objects.filter(type=type).values_list('id', flat=True))
         
         for subject in Subject.objects.filter(is_available=True):
             subject_ids[str(subject.id)] = str(subject.subject)
+
+        for price in Price.objects.all():
+            if str(price.subject.id) not in prices:
+                prices[str(price.subject.id)] = {}
+            if str(price.level.id) not in prices[str(price.subject.id)]:
+                prices[str(price.subject.id)][str(price.level.id)] = []
+            prices[str(price.subject.id)][str(price.level.id)].append([price.min_range, price.max_range, price.price])
         
+        for price in prices:
+            print(prices[price])
         context = {
             'formset': formset,
             'units': units,
             'subjects': subjects,
             'subject_ids': subject_ids,
+            'prices': prices,
         }
         # for unit in units:
         #     print(f"{unit}: {units[unit]}")
