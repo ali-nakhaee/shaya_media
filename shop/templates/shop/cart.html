@@ -49,6 +49,11 @@
         newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`);
         newForm.innerHTML = newForm.innerHTML.replace(priceTableRegex, `price-table-${formNum}`);
         container.insertBefore(newForm, addButton);
+
+        const subjectField = document.getElementById(`id_form-${formNum}-subject`);
+        subjectField.setAttribute("disabled", "disabled");
+        const priceTable = document.getElementById(`price-table-${formNum}`);
+        priceTable.innerHTML = "";
         
         totalForms.setAttribute('value', `${formNum+1}`);
         // console.log(totalForms.value);
@@ -87,6 +92,7 @@
             opt.innerHTML = {{ subject_ids|safe }}[subjects[i]];
             select.appendChild(opt);
         }
+        select.removeAttribute("disabled");
     }
 
     function changeUnitHelptext() {
