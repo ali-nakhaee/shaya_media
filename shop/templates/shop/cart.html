@@ -19,13 +19,23 @@
             <div class="col-md-6">
                 <div id="price-table-{{ forloop.counter0 }}">
                 </div>
+                <div id="item-price-{{ forloop.counter0 }}" data-value="0">
+                </div>
             </div>
             <hr>
         </div>
         </div>
         {% endfor %}
-    <button id="add-form" type="button" class="save btn btn-secondary">اضافه کردن آیتم</button>
-    <button type="submit" name="cart-form" class="save btn btn-secondary">ثبت سفارش</button>
+    <div class="row" id="last-row">
+        <div class="col-md-6">
+            <button id="add-form" type="button" class="save btn btn-secondary">اضافه کردن آیتم</button>
+            <button type="submit" name="cart-form" class="save btn btn-secondary">ثبت سفارش</button>
+        </div>
+        <div class="col-md-6">
+            <div id="total-price">
+            </div>
+        </div>
+    </div>
 </form>
 
 <script>
@@ -33,6 +43,7 @@
 
     let itemForm = document.querySelectorAll(".item-form")
     let container = document.querySelector("#form-container")
+    let lastRow = document.querySelector("#last-row")
     let addButton = document.querySelector("#add-form")
     let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
     let formNum = itemForm.length - 1;
@@ -44,16 +55,20 @@
         let newForm = itemForm[0].cloneNode(true);
         let formRegex = RegExp(`form-(\\d){1}-`,'g');
         let priceTableRegex = RegExp(`price-table-(\\d){1}`,'g');
+        let itemPriceRegex = RegExp(`item-price-(\\d){1}`,'g');
 
         formNum++;
         newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`);
         newForm.innerHTML = newForm.innerHTML.replace(priceTableRegex, `price-table-${formNum}`);
-        container.insertBefore(newForm, addButton);
+        newForm.innerHTML = newForm.innerHTML.replace(itemPriceRegex, `item-price-${formNum}`);
+        container.insertBefore(newForm, lastRow);
 
         const subjectField = document.getElementById(`id_form-${formNum}-subject`);
         subjectField.setAttribute("disabled", "disabled");
         const priceTable = document.getElementById(`price-table-${formNum}`);
         priceTable.innerHTML = "";
+        const itemPrice = document.getElementById(`item-price-${formNum}`);
+        itemPrice.innerHTML = "";
         
         totalForms.setAttribute('value', `${formNum+1}`);
         // console.log(totalForms.value);
@@ -63,14 +78,16 @@
 
     function addListeners() {
         for (var j = 0; j <= formNum; j++) {
-            let typeField = document.getElementById(`id_form-${j}-type`)
+            let typeField = document.getElementById(`id_form-${j}-type`);
             typeField.addEventListener('change', changeSubjectField)
             typeField.addEventListener('change', changeUnitHelptext)
-            let levelField = document.getElementById(`id_form-${j}-level`)
-            let subjectField = document.getElementById(`id_form-${j}-subject`)
+            let levelField = document.getElementById(`id_form-${j}-level`);
+            let subjectField = document.getElementById(`id_form-${j}-subject`);
             typeField.addEventListener('change', createPriceTable)
             subjectField.addEventListener('change', createPriceTable)
             levelField.addEventListener('change', createPriceTable)
+            let numberField = document.getElementById(`id_form-${j}-number`);
+            numberField.addEventListener('change', calculateItemPrice)
         }
     }
 
@@ -129,6 +146,37 @@
         const priceTable = document.getElementById(`price-table-${formNum}`);
         priceTable.innerHTML = "";
         priceTable.append(tbl);
+    }
+
+    function calculateItemPrice() {
+        let formNum = this.id.match(/\d/g).join("");
+        let subject_id = document.getElementById(`id_form-${formNum}-subject`).value;
+        let level_id = document.getElementById(`id_form-${formNum}-level`).value;
+        let number = this.value;
+        let prices = {{ prices|safe }}[subject_id][level_id];
+        let unitPrice = 0;
+        for (let price in prices) {
+            if (number >= prices[price][0] && number <= prices[price][1]) {
+                unitPrice = prices[price][2];
+                break;
+            }
+        }
+        itemPrice = unitPrice * number;
+        itemPriceElement = document.getElementById(`item-price-${formNum}`);
+        itemPriceElement.innerHTML = `قیمت این آیتم: ${itemPrice} هزار تومان`;
+        itemPriceElement.setAttribute("data-value", itemPrice);
+
+        updateTotalPrice()
+    }
+
+    function updateTotalPrice() {
+        itemPrices = document.querySelectorAll('[id^=item-price]');
+        totalPrice = Number("0");
+        for (let i = 0; i < itemPrices.length; i++) {
+            totalPrice += Number(itemPrices[i].getAttribute('data-value'));
+        }
+        console.log(totalPrice);
+        document.getElementById('total-price').innerHTML = `قیمت کل: ${totalPrice} هزار تومان`;
     }
 </script>
 
