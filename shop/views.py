@@ -90,7 +90,6 @@ class EditPrice(View):
 
 class Cart(View):
     def get(self, request):
-        # formset = ItemFormSet(queryset=Item.objects.none())
         formset = formset_factory(ItemForm, extra=1)
         units = {}
         subjects = {}
@@ -110,8 +109,6 @@ class Cart(View):
                 prices[str(price.subject.id)][str(price.level.id)] = []
             prices[str(price.subject.id)][str(price.level.id)].append([price.min_range, price.max_range, price.price])
         
-        for price in prices:
-            print(prices[price])
         context = {
             'formset': formset,
             'units': units,
@@ -119,33 +116,42 @@ class Cart(View):
             'subject_ids': subject_ids,
             'prices': prices,
         }
-        # for unit in units:
-        #     print(f"{unit}: {units[unit]}")
-        # for subject in subjects:
-        #     print(f"{subject}: {subjects[subject]}")
+        
         return render(request, "shop/cart.html", context)
 
     def post(self, request):
-        formset = ItemFormSet(data=request.POST)
+        ItemFormSet = formset_factory(ItemForm)
+        formset = ItemFormSet(request.POST)
         if formset.is_valid():
             order = Order.objects.create(buyer=request.user, price=0)
             order_price = 0
+            print(formset.cleaned_data[0])
             for form in formset:
-                if form.is_valid():
-                    new_item = form.save(commit=False)
-                    new_item.type = new_item.subject.type
-                    price = Price.objects.filter(
-                        type=new_item.type,
-                        subject=new_item.subject,
-                        level=new_item.level,
-                        min_range__lte=new_item.number,
-                        max_range__gte=new_item.number,
-                        is_available=True,
-                    ).first().price
-                    new_item.item_price = price * new_item.number
-                    new_item.order = order
-                    new_item.save()
-                    order_price += new_item.item_price
+                type = form.cleaned_data['type']
+                try:
+                    subject = Subject.objects.get(id=form.cleaned_data['subject'])
+                except:
+                    raise Http404
+                level = form.cleaned_data['level']
+                number = form.cleaned_data['number']
+                unit_price = Price.objects.filter(
+                    type=type,
+                    subject=subject,
+                    level=level,
+                    min_range__lte=number,
+                    max_range__gte=number,
+                    is_available=True,
+                ).first().price
+                item_price = unit_price * number
+                item = Item.objects.create(
+                    type=type,
+                    subject=subject,
+                    level=level,
+                    number=number,
+                    item_price=item_price,
+                    order=order,
+                )
+                order_price += item_price
             order.price = order_price
             order.save()
             messages.success(request, 'سفارش شما ایجاد شد.')

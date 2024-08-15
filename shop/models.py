@@ -22,7 +22,7 @@ class Subject(models.Model):
     is_available = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.type.type} - {self.subject}"
+        return self.subject
 
 
 class Level(models.Model):

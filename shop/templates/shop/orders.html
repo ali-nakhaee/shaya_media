@@ -79,7 +79,8 @@
         {% for item in order.items.all %}
         <div class="row mt-2">
             <div class="col-1">{{ forloop.counter }}</div>
-            <div class="col">نوع: {{ item.subject }}</div>
+            <div class="col">نوع: {{ item.type }}</div>
+            <div class="col">موضوع: {{ item.subject }}</div>
             <div class="col">سطح: {{ item.level }}</div>
             <div class="col">{{ item.number }} {{ item.type.unit }}</div>
             <div class="col">{{ item.item_price }} تومان</div>

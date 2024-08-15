@@ -61,16 +61,20 @@ ItemFormSet = forms.modelformset_factory(Item,
                                           
 
 class ItemForm(forms.Form):
-    type = forms.ModelChoiceField(queryset=Type.objects.filter(is_available=True), label='نوع')
-    subject = forms.ChoiceField(choices=(('0', "---------"),),
-                                label='موضوع',
-                                widget=forms.Select(attrs={"disabled":"disabled"}),
-                                )
+    type = forms.ModelChoiceField(queryset=Type.objects.filter(is_available=True),
+                                  label='نوع',
+                                  widget=forms.Select(attrs={'class': 'form-select'}),
+                                  )
+    subject = forms.CharField(label='موضوع',
+                              widget=forms.Select(attrs={"disabled":"disabled", 'class': 'form-select'}),
+                              )
     level = forms.ModelChoiceField(queryset=Level.objects.filter(is_available=True),
                                    label='سطح',
+                                   widget=forms.Select(attrs={'class': 'form-select'}),
                                    )
     number = forms.IntegerField(help_text=' ',
                                 label='تعداد',
+                                widget=forms.NumberInput(attrs={'class': 'form-control'}),
                                 )
     
 
