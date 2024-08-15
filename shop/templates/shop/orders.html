@@ -77,21 +77,22 @@
     <div id="collapse-{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ forloop.counter }}" data-bs-parent="#accordionExample">
         <div class="accordion-body">
         {% for item in order.items.all %}
-        <div class="row mt-2">
-            <div class="col-1">{{ forloop.counter }}</div>
-            <div class="col">نوع: {{ item.type }}</div>
-            <div class="col">موضوع: {{ item.subject }}</div>
-            <div class="col">سطح: {{ item.level }}</div>
-            <div class="col">{{ item.number }} {{ item.type.unit }}</div>
-            <div class="col">{{ item.item_price }} تومان</div>
+        <div class="row border-bottom">
+            <div class="col-4 col-sm-1">{{ forloop.counter }}</div>
+            <div class="col-3 col-sm-2">{{ item.type }}</div>
+            <div class="col-5 col-sm-2">{{ item.subject }}</div>
+            <div class="col-4 col-sm-2">{{ item.level }}</div>
+            <div class="col-3 col-sm-2">{{ item.number }} {{ item.type.unit }}</div>
+            <div class="col-5 col-sm-3">{{ item.item_price }} تومان</div>
         </div>
+        <br>
         {% endfor %}
-        <hr>
+        <br>
         <div class="row">
-            <div class="col-9">
+            <div class="col-6 col-sm-8">
                 تاریخ ثبت سفارش: {{ order.purchase_date }}
             </div>
-            <div class="col-3">
+            <div class="col-6 col-sm-4">
                 قیمت کل: {{ order.price }} تومان
             </div>
         </div>
