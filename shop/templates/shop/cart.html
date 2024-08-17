@@ -21,14 +21,14 @@
                             <label class="form-label" for="id_form-{{ forloop.counter0 }}-type">{{ form.type.label }}:</label>
                             {{ form.type.errors }}
                             {{ form.type }}
-                            <small class="form-text text-muted">{{ form.type.help_text }}</small>
+                            <small id="id_form-{{ forloop.counter0 }}-type_helptext" class="form-text text-muted">{{ form.type.help_text }}</small>
                         </div>
-                    
+                        <br>
                         <div class="fieldWrapper">
                             <label class="form-label" for="id_form-{{ forloop.counter0 }}-subject">{{ form.subject.label }}:</label>
                             {{ form.subject.errors }}
                             {{ form.subject }}
-                            <small class="form-text text-muted">{{ form.subject.help_text }}</small>
+                            <small id="id_form-{{ forloop.counter0 }}-subject_helptext" class="form-text text-muted">{{ form.subject.help_text }}</small>
                         </div>
                     </div>
                     <div class="col-sm-5">
@@ -36,14 +36,14 @@
                             <label class="form-label" for="id_form-{{ forloop.counter0 }}-level">{{ form.level.label }}:</label>
                             {{ form.level.errors }}
                             {{ form.level }}
-                            <small class="form-text text-muted">{{ form.level.help_text }}</small>
+                            <small id="id_form-{{ forloop.counter0 }}-level_helptext" class="form-text text-muted">{{ form.level.help_text }}</small>
                         </div>
-
+                        <br>
                         <div class="fieldWrapper">
                             <label class="form-label" for="id_form-{{ forloop.counter0 }}-number">{{ form.number.label }}:</label>
                             {{ form.number.errors }}
                             {{ form.number }}
-                            <small class="form-text text-muted">{{ form.number.help_text }}</small>
+                            <small id="id_form-{{ forloop.counter0 }}-number_helptext" class="form-text text-muted">{{ form.number.help_text }}</small>
                         </div>
                     </div>
                 </div>
@@ -60,11 +60,11 @@
         </div>
         {% endfor %}
     <div class="row" id="last-row">
-        <div class="col-md-6">
+        <div class="col-sm-6">
             <button id="add-form" type="button" class="save btn btn-primary">اضافه کردن آیتم</button>
             <button type="submit" name="cart-form" class="save btn btn-success">ثبت سفارش</button>
         </div>
-        <div class="col-md-6">
+        <div class="col-sm-6">
             <div id="total-price">
             </div>
         </div>
