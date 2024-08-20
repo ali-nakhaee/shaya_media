@@ -3,6 +3,8 @@ from django.views import View
 from django.http import Http404
 from django.contrib import messages
 from django.forms import formset_factory
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from .models import Price, Order, Item, Type, Subject
 from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemFormSet, ItemForm
@@ -88,7 +90,10 @@ class EditPrice(View):
             messages.success(request, 'قیمت با موفقیت تغییر کرد.')
         return redirect("shop:pricing")
 
+
+@method_decorator(login_required, name='dispatch')
 class Cart(View):
+
     def get(self, request):
         formset = formset_factory(ItemForm, extra=1)
         units = {}

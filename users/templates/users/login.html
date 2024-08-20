@@ -44,8 +44,7 @@
          <button name="submit" class="btn btn-primary col-md-2 mx-auto">ورود</button>
     </div>
     
-    <input type="hidden" name="next"
-      value="{% url 'blog:post_list' %}">
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
   </form>
 
 {% endblock content %}

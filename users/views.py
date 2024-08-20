@@ -23,7 +23,8 @@ class LoginPage(View):
             )
             if user is not None:
                 login(request, user)
-                return redirect('blog:post_list')
+                print(request.POST.get('next'))
+                return redirect(self.request.POST.get('next'))
             else:
                 messages.error(request, 'ورود ناموفق. رمز عبور یا نام کاربری اشتباه است.')
                 return render(request, 'users/login.html', {'form':form})
