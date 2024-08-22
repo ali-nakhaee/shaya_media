@@ -21,6 +21,7 @@ class User(AbstractUser):
             "unique": _("این نام کاربری قبلا ثبت شده است."),
         },
     )
+    phone_number = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=30, null=True)
     last_name = models.CharField(max_length=30, null=True)
 

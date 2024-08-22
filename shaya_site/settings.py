@@ -131,3 +131,8 @@ LOGIN_URL = '/users/login'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'users.backends.PhoneNumberAuthBackend',
+]
