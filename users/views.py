@@ -11,14 +11,16 @@ class LoginPage(View):
     """ Main login page """
     def get(self, request):
         form = forms.LoginForm()
-        context = {'form': form}
+        context = {'form': form,
+                   'check_password': False,
+                   }
         return render(request, 'users/login.html', context)
 
     def post(self, request):
         form = forms.LoginForm(request.POST)
         if form.is_valid():
             user = authenticate(
-                username=form.cleaned_data['username'],
+                username=form.cleaned_data['phone_number'],
                 password=form.cleaned_data['password'],
             )
             if user is not None:
@@ -44,6 +46,7 @@ class Register(View):
         form = forms.SignupForm(data=request.POST)
         if form.is_valid():
             new_user = form.save()
-            # Log the user in and then redirect to home page.
-            login(request, new_user)
+            login(request, new_user, backend='users.backends.PhoneNumberAuthBackend')
             return redirect('blog:post_list')
+        else:
+            print(form.errors)

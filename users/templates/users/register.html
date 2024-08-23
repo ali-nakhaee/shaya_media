@@ -58,6 +58,12 @@
       placeholder="" title={{ form.last_name.help_text }} required="" id="id_last_name">
       <small class="form-text text-muted">{{ form.last_name.help_text }}</small>
   </div><hr>
+  <div class="col-md-4 mx-auto">
+    <label class="form-label" for="id_phone_number">{{ form.phone_number.label }}</label>
+    <input type="text" name="phone_number" maxlength="150" class="form-control"
+    placeholder="" title={{ form.phone_number.help_text }} required="" id="id_phone_number">
+    <small class="form-text text-muted">{{ form.phone_number.help_text }}</small>
+</div>
   <div class="mx-auto text-center">
          <button name="submit" class="btn btn-primary mx-auto">ایجاد حساب</button>
   </div>

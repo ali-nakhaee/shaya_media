@@ -6,8 +6,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=150, label=_("نام کاربری"),)
-    password = forms.CharField(max_length=150, widget=forms.PasswordInput, label=_("رمز عبور"))
+    phone_number = forms.CharField(max_length=150, label=_("شماره همراه"),)
+    password = forms.CharField(max_length=150, widget=forms.PasswordInput, label=_("رمز موقت"))
 
 
 class SignupForm(UserCreationForm):
@@ -29,6 +29,6 @@ class SignupForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
-        fields = ('username', 'first_name', 'last_name')
+        fields = ('username', 'first_name', 'last_name', 'phone_number')
         labels = {'username': 'نام کاربری', 'first_name': 'نام', 'last_name': 'نام خانوادگی'}
 
