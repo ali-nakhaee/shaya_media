@@ -1,11 +1,15 @@
 """ users.views """
 
+import random
+
 from django.views import View
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib import messages
 
 from . import forms
+
+User = get_user_model()
 
 class LoginPage(View):
     """ Main login page """
@@ -13,6 +17,27 @@ class LoginPage(View):
         form = forms.LoginForm()
         context = {'form': form,
                    'check_password': False,
+                   }
+        return render(request, 'users/login.html', context)
+    
+    def post(self, request):
+        form = forms.LoginForm(request.POST)
+        if form.is_valid():
+            phone_number = form.cleaned_data['phone_number']
+            try:
+                user = User.objects.get(phone_number=phone_number)
+            except User.DoesNotExist:
+                user = User.objects.create(phone_number=phone_number)
+            user.temporary_password = random.randint(1000, 9999)
+            user.save()
+            messages.success(request, f"رمز موقت شما: {user.temporary_password}")
+            return redirect('users:check_password', kwargs={'phone_number': phone_number})
+        
+class CheckPassword(View):
+    def get(self, request, **kwargs):
+        form = forms.LoginForm(initial={'phone_number' : kwargs['phone_number']})
+        context = {'form': form,
+                   'check_password': True,
                    }
         return render(request, 'users/login.html', context)
 

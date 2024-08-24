@@ -6,8 +6,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
 
 class LoginForm(forms.Form):
-    phone_number = forms.CharField(max_length=150, label=_("شماره همراه"),)
-    password = forms.CharField(max_length=150, widget=forms.PasswordInput, label=_("رمز موقت"))
+    phone_number = forms.CharField(max_length=150, label=_("شماره همراه"))
+    password = forms.CharField(max_length=150, widget=forms.PasswordInput, label=_("رمز موقت"), required=False)
 
 
 class SignupForm(UserCreationForm):

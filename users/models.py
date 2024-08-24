@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, Group
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.utils import timezone
 
 class User(AbstractUser):
     """ custom user model """
@@ -22,7 +23,11 @@ class User(AbstractUser):
             "unique": _("این نام کاربری قبلا ثبت شده است."),
         },
     )
+
     phone_number = models.CharField(max_length=30, unique=True)
+    temporary_password = models.CharField(max_length=200)
+    password_generation_time = models.DateTimeField(default=timezone.now)
+
     first_name = models.CharField(max_length=30, null=True)
     last_name = models.CharField(max_length=30, null=True)
 
