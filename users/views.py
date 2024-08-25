@@ -31,11 +31,13 @@ class LoginPage(View):
             user.temporary_password = random.randint(1000, 9999)
             user.save()
             messages.success(request, f"رمز موقت شما: {user.temporary_password}")
-            return redirect('users:check_password', kwargs={'phone_number': phone_number})
+            request.session['phone_number'] = phone_number
+            return redirect('users:check_password')
         
 class CheckPassword(View):
-    def get(self, request, **kwargs):
-        form = forms.LoginForm(initial={'phone_number' : kwargs['phone_number']})
+    def get(self, request):
+        phone_number = request.session.get('phone_number')
+        form = forms.LoginForm(initial={'phone_number': phone_number})
         context = {'form': form,
                    'check_password': True,
                    }

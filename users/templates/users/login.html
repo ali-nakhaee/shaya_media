@@ -34,6 +34,7 @@
         <input type="text" name="phone_number" maxlength="150" autocapitalize="none"
         autocomplete="username" autofocus="" class="form-control" placeholder=""
         title="{{ form.phone_number.help_text }}" required="" id="id_phone_number"
+        {% if form.phone_number.value %}value="{{ form.phone_number.value }}"{% endif %}
         {% if check_password %}disabled{% endif %}>
       </div>
     </div>
