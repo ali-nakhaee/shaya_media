@@ -26,7 +26,7 @@
 
 
 
-  <form method="post" action="{% url 'users:login' %}">
+  <form method="post">
     {% csrf_token %}
     <div class="row g-3">
       <div class="col-md-4 mx-auto">
@@ -35,12 +35,12 @@
         autocomplete="username" autofocus="" class="form-control" placeholder=""
         title="{{ form.phone_number.help_text }}" required="" id="id_phone_number"
         {% if form.phone_number.value %}value="{{ form.phone_number.value }}"{% endif %}
-        {% if check_password %}disabled{% endif %}>
+        {% if check_password %}readonly{% endif %}>
       </div>
     </div>
     <br>
     <div class="mx-auto text-center">
-      <button name="submit" class="btn btn-primary col-md-2 mx-auto" {% if check_password %}disabled{% endif %}>دریافت رمز موقت</button>
+      <button name="submit" action="{% url 'users:login' %}" class="btn btn-primary col-md-2 mx-auto" {% if check_password %}disabled{% endif %}>دریافت رمز موقت</button>
     </div>
     <div class="row g-3">
       <div class="col-md-4 mx-auto">
@@ -52,7 +52,7 @@
       </div>
     </div>
     <div class="mx-auto text-center">
-         <button name="submit" class="btn btn-primary col-md-2 mx-auto" {% if not check_password %}disabled{% endif %}>ورود</button>
+         <button name="submit" action="{% url 'users:check_password' %}" class="btn btn-primary col-md-2 mx-auto" {% if not check_password %}disabled{% endif %}>ورود</button>
     </div>
     
     <input type="hidden" name="next" value="{{ request.GET.next }}">
