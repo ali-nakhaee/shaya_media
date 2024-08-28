@@ -27,6 +27,7 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=30, unique=True)
     temporary_password = models.CharField(max_length=200)
     password_generation_time = models.DateTimeField(default=timezone.now)
+    salt = models.CharField(max_length=50)
 
     first_name = models.CharField(max_length=30, null=True)
     last_name = models.CharField(max_length=30, null=True)
