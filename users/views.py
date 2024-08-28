@@ -1,6 +1,7 @@
 """ users.views """
 
 import random
+import hashlib
 
 from django.views import View
 from django.shortcuts import render, redirect
@@ -30,10 +31,13 @@ class LoginPage(View):
                 user = User.objects.get(phone_number=phone_number)
             except User.DoesNotExist:
                 user = User.objects.create(phone_number=phone_number)
-            user.temporary_password = random.randint(1000, 9999)
+            random_number = random.randint(1000, 9999)
+            hash_object = hashlib.sha256(str(random_number).encode('utf-8'))  
+            hex_dig = hash_object.hexdigest()
+            user.temporary_password = hex_dig
             user.password_generation_time = timezone.now()
             user.save()
-            messages.success(request, f"رمز موقت شما: {user.temporary_password}")
+            messages.success(request, f"رمز موقت شما: {random_number}")
             request.session['phone_number'] = phone_number
             return redirect('users:check_password')
         else:
@@ -59,7 +63,10 @@ class CheckPassword(View):
                 user = User.objects.get(phone_number=form.cleaned_data['phone_number'])
             except User.DoesNotExist:
                 raise Http404
-            if user.temporary_password == form.cleaned_data['password']:
+            form_password = form.cleaned_data['password']
+            hash_object = hashlib.sha256(str(form_password).encode('utf-8'))
+            hex_dig = hash_object.hexdigest()
+            if user.temporary_password == hex_dig:
                 login(request, user, backend='users.backends.PhoneNumberAuthBackend')
                 if request.POST.get('next'):
                     print(request.POST.get('next'))
