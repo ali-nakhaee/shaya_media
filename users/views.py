@@ -3,6 +3,7 @@
 import random
 import hashlib
 import string
+from datetime import datetime
 
 from django.views import View
 from django.shortcuts import render, redirect
@@ -69,7 +70,8 @@ class CheckPassword(View):
             form_password = form.cleaned_data['password']
             hash_object = hashlib.sha256((str(form_password) + user.salt).encode('utf-8'))
             hex_dig = hash_object.hexdigest()
-            if user.temporary_password == hex_dig:
+            delta_time = (datetime.now().astimezone() - user.password_generation_time).total_seconds()
+            if (user.temporary_password == hex_dig) and (delta_time < 120):         # Check password and its generaion time
                 login(request, user, backend='users.backends.PhoneNumberAuthBackend')
                 if request.POST.get('next'):
                     print(request.POST.get('next'))

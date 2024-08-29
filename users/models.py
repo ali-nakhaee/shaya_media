@@ -49,4 +49,6 @@ class User(AbstractUser):
             group, created = Group.objects.get_or_create(name='bloggers')
             group.user_set.add(self)
 
+    def __str__(self):
+        return self.phone_number
             
