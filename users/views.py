@@ -7,7 +7,7 @@ from datetime import datetime
 
 from django.views import View
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout, get_user_model
+from django.contrib.auth import login, logout, get_user_model
 from django.contrib import messages
 from django.utils import timezone
 from django.http import Http404
@@ -43,6 +43,7 @@ class LoginPage(View):
             user.save()
             messages.success(request, f"رمز موقت شما: {random_number}")
             request.session['phone_number'] = phone_number
+            request.session['next'] = request.POST.get('next')
             return redirect('users:check_password')
         else:
             context = {'form': form,
@@ -73,9 +74,8 @@ class CheckPassword(View):
             delta_time = (datetime.now().astimezone() - user.password_generation_time).total_seconds()
             if (user.temporary_password == hex_dig) and (delta_time < 120):         # Check password and its generaion time
                 login(request, user, backend='users.backends.PhoneNumberAuthBackend')
-                if request.POST.get('next'):
-                    print(request.POST.get('next'))
-                    return redirect(self.request.POST.get('next'))
+                if request.session.get('next'):
+                    return redirect(request.session.get('next'))
                 else:
                     return redirect('shop:orders')
             else:
