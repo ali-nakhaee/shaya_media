@@ -17,7 +17,7 @@ class PostList(View):
     
 @method_decorator(login_required, name='dispatch')
 class AddPost(View):
-    # permissions need. authentication, blogger_permission
+    # permissions need. authentication, blogger_permission -> post model permission
     def get(self, request):
         form = PostForm()
         return render(request, 'blog/add_post.html', {'form': form})

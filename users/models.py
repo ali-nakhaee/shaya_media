@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils import timezone
 
+
 class User(AbstractUser):
     """ custom user model """
     username_validator = UnicodeUsernameValidator()
@@ -13,6 +14,7 @@ class User(AbstractUser):
         _("username"),
         max_length=150,
         null=True,
+        blank=True,
         unique=True,
         help_text=_(
             # "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
@@ -24,13 +26,15 @@ class User(AbstractUser):
         },
     )
 
+    password = models.CharField(max_length=20, null=True, blank=True)
+
     phone_number = models.CharField(max_length=30, unique=True)
     temporary_password = models.CharField(max_length=200)
     password_generation_time = models.DateTimeField(default=timezone.now)
     salt = models.CharField(max_length=50)
 
-    first_name = models.CharField(max_length=30, null=True)
-    last_name = models.CharField(max_length=30, null=True)
+    first_name = models.CharField(max_length=30, null=True, blank=True)
+    last_name = models.CharField(max_length=30, null=True, blank=True)
 
     VIEWER = "VIEWER"
     BLOGGER = "BLOGGER"

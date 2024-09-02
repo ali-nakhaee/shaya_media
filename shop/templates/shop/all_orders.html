@@ -1,0 +1,104 @@
+{% extends "blog/base.html" %}
+
+{% block page_header %}
+<div class="mx-auto text-center">
+  <h2>تمام سفارش‌ها</h2>
+</div>
+{% endblock page_header %}
+
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <div class="container-fluid p-0">
+    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert" >
+      <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="True">&times;</span>
+      </button>
+      {{ message }}
+    </div>
+  </div>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<div class="accordion" id="accordionExample">
+    {% for order in orders %}
+    <div class="accordion-item">
+    <h2 class="accordion-header" id="heading-{{ forloop.counter }}">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse-{{ forloop.counter }}">
+            <div class="container">
+                <div class="row">
+                <div class="col-sm-5">
+                    <strong>کد سفارش: MM-{{ order.tracking_code }}</strong>
+                </div>
+                {% if order.status == "در حال بررسی" %}
+                    {% with status="bg-warning text-dark" %}
+                    <div class="col-sm-7 text-end">
+                        <span class="badge {{status}}">وضعیت: {{ order.status }}</span>
+                    </div>
+                    {% endwith %}
+                {% elif order.status == "پذیرفته شده" %}
+                    {% with status="bg-primary" %}
+                    <div class="col-sm-7 text-end">
+                        <span class="badge {{status}}">وضعیت: {{ order.status }}</span>
+                    </div>
+                    {% endwith %}
+                {% elif order.status == "در حال انجام" %}
+                    {% with status="bg-info text-dark" %}
+                    <div class="col-sm-7 text-end">
+                        <span class="badge {{status}}">وضعیت: {{ order.status }}</span>
+                    </div>
+                    {% endwith %}
+                {% elif order.status == "به اتمام رسیده" %}
+                    {% with status="bg-success" %}
+                    <div class="col-sm-7 text-end">
+                        <span class="badge {{status}}">وضعیت: {{ order.status }}</span>
+                    </div>
+                    {% endwith %}
+                {% elif order.status == "رد شده" %}
+                    {% with status="bg-danger" %}
+                    <div class="col-sm-7 text-end">
+                        <span class="badge {{status}}">وضعیت: {{ order.status }}</span>
+                    </div>
+                    {% endwith %}
+                {% else %}
+                    {% with status="bg-secondary" %}
+                    <div class="col-sm-7 text-end">
+                        <span class="badge {{status}}">وضعیت: {{ order.status }}</span>
+                    </div>
+                    {% endwith %}
+                {% endif %}
+                </div>
+            </div>
+        </button>
+    </h2>
+    <div id="collapse-{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ forloop.counter }}" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+        {% for item in order.items.all %}
+        <div class="row border-bottom">
+            <div class="col-4 col-sm-1">{{ forloop.counter }}</div>
+            <div class="col-3 col-sm-2">{{ item.type }}</div>
+            <div class="col-5 col-sm-2">{{ item.subject }}</div>
+            <div class="col-4 col-sm-2">{{ item.level }}</div>
+            <div class="col-3 col-sm-2">{{ item.number }} {{ item.type.unit }}</div>
+            <div class="col-5 col-sm-3">{{ item.item_price }} تومان</div>
+        </div>
+        <br>
+        {% endfor %}
+        <br>
+        <div class="row">
+            <div class="col-6 col-sm-8">
+                تاریخ ثبت سفارش: {{ order.purchase_date }}
+            </div>
+            <div class="col-6 col-sm-4">
+                قیمت کل: {{ order.price }} تومان
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

@@ -162,8 +162,18 @@ class Cart(View):
             messages.success(request, 'سفارش شما ایجاد شد.')
         return redirect("shop:orders")
     
+
+@method_decorator(login_required, name='dispatch')
 class Orders(View):
     def get(self, request):
         orders = Order.objects.filter(buyer=request.user).order_by('-purchase_date')
         return render(request, 'shop/orders.html', {'orders': orders})
     
+
+
+class AllOrders(View):
+    def get(self, request):
+        if not request.user.has_perm('shop.change_order_status'):
+            raise Http404
+        orders = Order.objects.all()
+        return render(request, 'shop/all_orders.html', {'orders': orders})

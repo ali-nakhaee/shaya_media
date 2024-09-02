@@ -16,6 +16,7 @@ from . import forms
 
 User = get_user_model()
 
+
 class LoginPage(View):
     """ Main login page """
     def get(self, request):
@@ -50,7 +51,8 @@ class LoginPage(View):
                        'check_password': False,
                        }
             return render(request, 'users/login.html', context)
-        
+
+
 class CheckPassword(View):
     def get(self, request):
         phone_number = request.session.get('phone_number')
@@ -72,7 +74,7 @@ class CheckPassword(View):
             hash_object = hashlib.sha256((str(form_password) + user.salt).encode('utf-8'))
             hex_dig = hash_object.hexdigest()
             delta_time = (datetime.now().astimezone() - user.password_generation_time).total_seconds()
-            if (user.temporary_password == hex_dig) and (delta_time < 120):         # Check password and its generaion time
+            if (user.temporary_password == hex_dig) and (delta_time < 120):     # Check password and its generation time
                 login(request, user, backend='users.backends.PhoneNumberAuthBackend')
                 if request.session.get('next'):
                     return redirect(request.session.get('next'))
@@ -83,12 +85,14 @@ class CheckPassword(View):
                 return redirect('users:login')
         else:
             return redirect('users:login')
-            
+
+
 class Logout(View):
     def get(self, request):
         logout(request)
         return render(request, 'users/logged_out.html')
-    
+
+
 class Register(View):
     """ Register a new user """
     def get(self, request):
