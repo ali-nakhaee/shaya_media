@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
 from .models import Price, Order, Item, Type, Subject
-from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemFormSet, ItemForm
+from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemFormSet, ItemForm, OrderStatusForm
 
 class Pricing(View):
 
@@ -165,15 +165,33 @@ class Cart(View):
 
 @method_decorator(login_required, name='dispatch')
 class Orders(View):
+    """ Show orders of specific user """
     def get(self, request):
         orders = Order.objects.filter(buyer=request.user).order_by('-purchase_date')
         return render(request, 'shop/orders.html', {'orders': orders})
     
 
-
 class AllOrders(View):
+    """ Show all orders to manager """
     def get(self, request):
         if not request.user.has_perm('shop.change_order_status'):
             raise Http404
         orders = Order.objects.all()
-        return render(request, 'shop/all_orders.html', {'orders': orders})
+        form = OrderStatusForm()
+        context = {'orders': orders, 'form': form}
+        return render(request, 'shop/all_orders.html', context)
+    
+    def post(self, request):
+        if not request.user.has_perm('shop.change_order_status'):
+            raise Http404
+        form = OrderStatusForm(data=request.POST)
+        if form.is_valid():
+            try:
+                order = Order.objects.get(id=form.cleaned_data['order_id'])
+            except Order.DoesNotExist:
+                raise Http404
+            order.status = form.cleaned_data['status']
+            order.save()
+            messages.success(request, 'وضعیت سفارش تغییر کرد.')
+        return redirect("shop:all_orders")
+

@@ -96,6 +96,20 @@
                 قیمت کل: {{ order.price }} تومان
             </div>
         </div>
+        <br>
+        <div class="row">
+            <div class="col-4 col-sm-4">
+                شماره تماس: {{ order.buyer.phone_number }}
+            </div>
+            <div class="col-8 col-sm-12">
+                <form method="POST" class="post-form">
+                    {% csrf_token %}
+                    <input type="hidden" id="order_id" name="order_id" value="{{ order.id }}">
+                    {{ form.status.as_field_group }}
+                    <button type="submit" name="status-form" class="save btn btn-secondary">تغییر وضعیت</button>
+                </form>
+            </div>
+        </div>
         </div>
     </div>
     </div>

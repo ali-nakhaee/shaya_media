@@ -2,7 +2,7 @@
 
 from django import forms
 
-from .models import Type, Subject, Level, Price, Item
+from .models import Type, Subject, Level, Price, Item, Order
 
 class TypeForm(forms.ModelForm):
     class Meta:
@@ -77,4 +77,10 @@ class ItemForm(forms.Form):
                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
                                 )
     
+
+class OrderStatusForm(forms.Form):
+    order_id = forms.IntegerField(widget=forms.HiddenInput())
+    status = forms.ChoiceField(choices=Order.STATUS_CHOICES,
+                               label='وضعیت',
+                               )
 
