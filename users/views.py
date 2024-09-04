@@ -4,6 +4,7 @@ import random
 import hashlib
 import string
 from datetime import datetime
+from unidecode import unidecode
 
 from django.views import View
 from django.shortcuts import render, redirect
@@ -29,7 +30,8 @@ class LoginPage(View):
     def post(self, request):
         form = forms.LoginForm(request.POST)
         if form.is_valid():
-            phone_number = form.cleaned_data['phone_number']
+            phone_number = unidecode(form.cleaned_data['phone_number'])
+            print(phone_number)
             try:
                 user = User.objects.get(phone_number=phone_number)
             except User.DoesNotExist:
@@ -70,7 +72,7 @@ class CheckPassword(View):
                 user = User.objects.get(phone_number=form.cleaned_data['phone_number'])
             except User.DoesNotExist:
                 raise Http404
-            form_password = form.cleaned_data['password']
+            form_password = unidecode(form.cleaned_data['password'])
             hash_object = hashlib.sha256((str(form_password) + user.salt).encode('utf-8'))
             hex_dig = hash_object.hexdigest()
             delta_time = (datetime.now().astimezone() - user.password_generation_time).total_seconds()

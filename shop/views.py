@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.forms import formset_factory
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from .models import Price, Order, Item, Type, Subject
 from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemFormSet, ItemForm, OrderStatusForm
@@ -171,19 +172,17 @@ class Orders(View):
         return render(request, 'shop/orders.html', {'orders': orders})
     
 
-class AllOrders(View):
+class AllOrders(PermissionRequiredMixin, View):
     """ Show all orders to manager """
+    permission_required = 'shop.change_order_status'
+
     def get(self, request):
-        if not request.user.has_perm('shop.change_order_status'):
-            raise Http404
         orders = Order.objects.all()
         form = OrderStatusForm()
         context = {'orders': orders, 'form': form}
         return render(request, 'shop/all_orders.html', context)
     
     def post(self, request):
-        if not request.user.has_perm('shop.change_order_status'):
-            raise Http404
         form = OrderStatusForm(data=request.POST)
         if form.is_valid():
             try:
