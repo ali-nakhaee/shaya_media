@@ -119,6 +119,7 @@
             typeField.addEventListener('change', createPriceTable)
             subjectField.addEventListener('change', createPriceTable)
             levelField.addEventListener('change', createPriceTable)
+            levelField.addEventListener('change', changeNumberFieldLimits)
             let numberField = document.getElementById(`id_form-${j}-number`);
             numberField.addEventListener('change', calculateItemPrice)
         }
@@ -210,6 +211,26 @@
         }
         console.log(totalPrice);
         document.getElementById('total-price').innerHTML = `قیمت کل: ${totalPrice} هزار تومان`;
+    }
+
+    function changeNumberFieldLimits() {
+        let formNum = this.id.match(/\d/g).join("");
+        let subjectId = document.getElementById(`id_form-${formNum}-subject`).value;
+        let levelId = document.getElementById(`id_form-${formNum}-level`).value;
+        let prices = {{ prices|safe }}[subjectId][levelId];
+        let minNumber = 1000;
+        let maxNumber = 0;
+        for (let price in prices) {
+            if (prices[price][0] < minNumber) {
+                minNumber = prices[price][0]
+            }
+            if (prices[price][1] > maxNumber) {
+                maxNumber = prices[price][1]
+            }
+        }
+        let numberField = document.getElementById(`id_form-${formNum}-number`);
+        numberField.setAttribute("min", minNumber);
+        numberField.setAttribute("max", maxNumber);
     }
 </script>
 

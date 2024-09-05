@@ -73,7 +73,7 @@ class ItemForm(forms.Form):
                                    widget=forms.Select(attrs={'class': 'form-select'}),
                                    )
     number = forms.IntegerField(help_text=' ',
-                                label='تعداد',
+                                label='مقدار',
                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
                                 )
     
