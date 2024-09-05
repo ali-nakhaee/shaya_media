@@ -177,7 +177,7 @@ class AllOrders(PermissionRequiredMixin, View):
     permission_required = 'shop.change_order_status'
 
     def get(self, request):
-        orders = Order.objects.all()
+        orders = Order.objects.all().order_by('status')
         form = OrderStatusForm()
         context = {'orders': orders, 'form': form}
         return render(request, 'shop/all_orders.html', context)

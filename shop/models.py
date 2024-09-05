@@ -58,11 +58,11 @@ class Order(models.Model):
     tracking_code = models.IntegerField(null=True)
     price = models.IntegerField()
 
-    PENDING = "در حال بررسی"
-    ACCEPTED = "پذیرفته شده"
-    DOING = "در حال انجام"
-    FINISHED = "به اتمام رسیده"
-    REJECTED = "رد شده"
+    PENDING = 0
+    ACCEPTED = 1
+    DOING = 2
+    FINISHED = 3
+    REJECTED = 4
     
     STATUS_CHOICES = (
         (PENDING, "در حال بررسی"),
@@ -71,7 +71,7 @@ class Order(models.Model):
         (FINISHED, "به اتمام رسیده"),
         (REJECTED, "رد شده"),
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
+    status = models.SmallIntegerField(choices=STATUS_CHOICES, default=PENDING)
 
     def save(self, *args, **kwargs):
         self.tracking_code = 1
