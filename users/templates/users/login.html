@@ -31,7 +31,7 @@
     <div class="row g-3">
       <div class="col-md-4 mx-auto">
         <label class="form-label" for="id_phone_number">{{ form.phone_number.label }}</label>
-        <input type="text" name="phone_number" maxlength="150" autocapitalize="none"
+        <input type="tel" name="phone_number" maxlength="11" minlength="11" autocapitalize="none"
         autocomplete="username" autofocus="" class="form-control" placeholder=""
         title="{{ form.phone_number.help_text }}" required="" id="id_phone_number"
         {% if form.phone_number.value %}value="{{ form.phone_number.value }}"{% endif %}

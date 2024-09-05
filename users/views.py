@@ -31,7 +31,6 @@ class LoginPage(View):
         form = forms.LoginForm(request.POST)
         if form.is_valid():
             phone_number = unidecode(form.cleaned_data['phone_number'])
-            print(phone_number)
             try:
                 user = User.objects.get(phone_number=phone_number)
             except User.DoesNotExist:
