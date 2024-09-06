@@ -119,6 +119,7 @@
             typeField.addEventListener('change', createPriceTable)
             subjectField.addEventListener('change', createPriceTable)
             levelField.addEventListener('change', createPriceTable)
+            subjectField.addEventListener('change', changeNumberFieldLimits)
             levelField.addEventListener('change', changeNumberFieldLimits)
             let numberField = document.getElementById(`id_form-${j}-number`);
             numberField.addEventListener('change', calculateItemPrice)

@@ -6,6 +6,7 @@ from django.forms import formset_factory
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Prefetch
 
 from .models import Price, Order, Item, Type, Subject
 from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemFormSet, ItemForm, OrderStatusForm
@@ -108,7 +109,7 @@ class Cart(View):
         for subject in Subject.objects.filter(is_available=True):
             subject_ids[str(subject.id)] = str(subject.subject)
 
-        for price in Price.objects.all():
+        for price in Price.objects.filter(is_available=True):
             if str(price.subject.id) not in prices:
                 prices[str(price.subject.id)] = {}
             if str(price.level.id) not in prices[str(price.subject.id)]:
@@ -168,7 +169,9 @@ class Cart(View):
 class Orders(View):
     """ Show orders of specific user """
     def get(self, request):
-        orders = Order.objects.filter(buyer=request.user).order_by('-purchase_date')
+        orders = Order.objects.filter(buyer=request.user).order_by('-purchase_date').prefetch_related(
+            Prefetch('items', queryset=Item.objects.select_related('type', 'subject', 'level'))
+        )
         return render(request, 'shop/orders.html', {'orders': orders})
     
 
@@ -177,7 +180,9 @@ class AllOrders(PermissionRequiredMixin, View):
     permission_required = 'shop.change_order_status'
 
     def get(self, request):
-        orders = Order.objects.all().order_by('status')
+        orders = Order.objects.all().order_by('status').select_related('buyer').prefetch_related(
+            Prefetch('items', queryset=Item.objects.select_related('type', 'subject', 'level'))
+        )
         form = OrderStatusForm()
         context = {'orders': orders, 'form': form}
         return render(request, 'shop/all_orders.html', context)

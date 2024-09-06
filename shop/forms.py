@@ -34,13 +34,14 @@ class LevelForm(forms.ModelForm):
 class PriceForm(forms.ModelForm):
     class Meta:
         model = Price
-        fields = ('subject', 'level', 'min_range', 'max_range', 'price')
+        fields = ('subject', 'level', 'min_range', 'max_range', 'price', 'is_available')
         labels = {
             'subject': 'نوع - موضوع',
             'level': 'سطح',
             'min_range': 'شروع محدوده',
             'max_range': 'پایان محدوده',
             'price': 'قیمت',
+            'is_available': 'قابل سفارش',
         }
 
 
