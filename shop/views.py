@@ -109,7 +109,7 @@ class Cart(View):
         for subject in Subject.objects.filter(is_available=True):
             subject_ids[str(subject.id)] = str(subject.subject)
 
-        for price in Price.objects.filter(is_available=True):
+        for price in Price.objects.filter(is_available=True).select_related('subject'):
             if str(price.subject.id) not in prices:
                 prices[str(price.subject.id)] = {}
             if str(price.level.id) not in prices[str(price.subject.id)]:
