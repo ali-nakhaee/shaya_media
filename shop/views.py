@@ -104,7 +104,7 @@ class Cart(View):
         prices = {}
         for type in Type.objects.filter(is_available=True):
             units[str(type.id)] = str(type.unit)
-            subjects[str(type.id)] = list(Subject.objects.filter(type=type).values_list('id', flat=True))
+            subjects[str(type.id)] = list(Subject.objects.filter(type=type, is_available=True).values_list('id', flat=True))
         
         for subject in Subject.objects.filter(is_available=True):
             subject_ids[str(subject.id)] = str(subject.subject)
