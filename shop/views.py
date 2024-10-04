@@ -98,24 +98,38 @@ class Cart(View):
 
     def get(self, request):
         formset = formset_factory(ItemForm, extra=1)
-        units = {}
-        subjects = {}
-        subject_ids = {}
-        prices = {}
+        units = {}  # {'type.id': 'type.unit'}      Ex: {'1': 'hour'}
+        subjects = {}   # {'type.id': [subjects_ids]}       Ex: {'1': [1, 4, 5]}
+        subject_ids = {}    # {'subject.id': 'subject_name'}    Ex: {'1': 'news'}
+        prices = {}     # {'subject.id': {'level.id': [price.min_range, price.max_range, price]}}
+                        # Ex: {'1': {'1': [[0, 5, 400000]]}, '3': {'1': [[8, 20, 35000]], '2': [[8, 20, 45000]]}}
+
+        subject_objects = Subject.objects.filter(is_available=True).prefetch_related('type')
+        subject_data = []   # list for save query data and reduce number of queries.
+        for subject in subject_objects:
+            subject_data.append({'id': str(subject.id),
+                                 'type_id': str(subject.type.id),
+                                 'subject': str(subject.subject),
+                                 })
+
         for type in Type.objects.filter(is_available=True):
             units[str(type.id)] = str(type.unit)
-            subjects[str(type.id)] = list(Subject.objects.filter(type=type, is_available=True).values_list('id', flat=True))
-        
-        for subject in Subject.objects.filter(is_available=True):
-            subject_ids[str(subject.id)] = str(subject.subject)
+            subjects_id_list = []   # Temporary dic for related subjects ids
+            for subject in subject_data:
+                if subject['type_id'] == str(type.id):
+                    subjects_id_list.append(int(subject['id']))
+            subjects[str(type.id)] = subjects_id_list
 
-        for price in Price.objects.filter(is_available=True).select_related('subject'):
+        for subject in subject_data:
+            subject_ids[str(subject['id'])] = str(subject['subject'])
+
+        for price in Price.objects.filter(is_available=True).select_related('subject', 'level'):
             if str(price.subject.id) not in prices:
                 prices[str(price.subject.id)] = {}
             if str(price.level.id) not in prices[str(price.subject.id)]:
                 prices[str(price.subject.id)][str(price.level.id)] = []
             prices[str(price.subject.id)][str(price.level.id)].append([price.min_range, price.max_range, price.price])
-        
+
         context = {
             'formset': formset,
             'units': units,
