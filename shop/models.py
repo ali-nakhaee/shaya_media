@@ -3,6 +3,7 @@ from decouple import config
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 User = settings.AUTH_USER_MODEL
 
@@ -42,6 +43,7 @@ class Price(models.Model):
     max_range = models.IntegerField()   # Maximum value for this price range based on Type.unit
     price = models.IntegerField()
     is_available = models.BooleanField(default=True)
+    discount = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
 
     def __str__(self):
         return str(self.price)
