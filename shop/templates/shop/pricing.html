@@ -79,12 +79,13 @@
 <div class="col-sm-3 mt-3">
     <div class="card">
         <div class="card-header text-center">
-          {{ price.subject }}
+          {{ price.type }} - {{ price.subject }}
         </div>
         <div class="card-body text-center">
           <h6 class="card-title">{{ price.level }}</h6>
           <h6 class="card-text">{{ price.min_range }} - {{ price.max_range }} {{ price.type.unit }}</h6>
           <h6 class="card-text">{{ price.price }} تومان</h6>
+          <h6 class="card-text">درصد تخفیف: {{ price.discount }}</h6>
           <a href="{% url 'shop:edit_price' price.id %}" class="btn btn-primary">تغییر قیمت</a>
         </div>
       </div>

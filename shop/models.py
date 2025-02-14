@@ -43,7 +43,9 @@ class Price(models.Model):
     max_range = models.IntegerField()   # Maximum value for this price range based on Type.unit
     price = models.IntegerField()
     is_available = models.BooleanField(default=True)
-    discount = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    discount = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
+                                   default=0,
+                                   )
 
     def __str__(self):
         return str(self.price)
