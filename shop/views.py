@@ -101,8 +101,8 @@ class Cart(View):
         units = {}  # {'type.id': 'type.unit'}      Ex: {'1': 'hour'}
         subjects = {}   # {'type.id': [subjects_ids]}       Ex: {'1': [1, 4, 5]}
         subject_ids = {}    # {'subject.id': 'subject_name'}    Ex: {'1': 'news'}
-        prices = {}     # {'subject.id': {'level.id': [price.min_range, price.max_range, price]}}
-                        # Ex: {'1': {'1': [[0, 5, 400000]]}, '3': {'1': [[8, 20, 35000]], '2': [[8, 20, 45000]]}}
+        prices = {}     # {'subject.id': {'level.id': [price.min_range, price.max_range, price, discount]}}
+                        # Ex: {'1': {'1': [[0, 5, 400000, 10]]}, '3': {'1': [[8, 20, 35000, 0]], '2': [[8, 20, 45000, 25]]}}
 
         subject_objects = Subject.objects.filter(is_available=True).prefetch_related('type')
         subject_data = []   # list for save query data and reduce number of queries.
@@ -128,7 +128,7 @@ class Cart(View):
                 prices[str(price.subject.id)] = {}
             if str(price.level.id) not in prices[str(price.subject.id)]:
                 prices[str(price.subject.id)][str(price.level.id)] = []
-            prices[str(price.subject.id)][str(price.level.id)].append([price.min_range, price.max_range, price.price])
+            prices[str(price.subject.id)][str(price.level.id)].append([price.min_range, price.max_range, price.price, price.discount])
 
         context = {
             'formset': formset,
@@ -162,8 +162,8 @@ class Cart(View):
                     min_range__lte=number,
                     max_range__gte=number,
                     is_available=True,
-                ).first().price
-                item_price = unit_price * number
+                ).first()
+                item_price = unit_price.price * (1 - unit_price.discount/100) * number
                 item = Item.objects.create(
                     type=type,
                     subject=subject,
