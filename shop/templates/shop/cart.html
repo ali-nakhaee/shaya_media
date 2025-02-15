@@ -152,6 +152,14 @@
         document.getElementById(`id_form-${formNum}-number_helptext`).innerHTML = {{ units|safe }}[this.value];
     }
 
+    function strikeThrough(text) {
+        // Add a strike through line to price (before discount)
+        return text
+          .split('')
+          .map(char => char + '\u0336')
+          .join('')
+      }
+
     function createPriceTable() {
         let formNum = this.id.match(/\d/g).join("");
         const tbl = document.createElement("table");
@@ -175,7 +183,15 @@
             td1.textContent = "بین " + prices[price][0] + " تا " + prices[price][1] + " " + unit;
             td1.classList.add("table-secondary");
             const td2 = tr.insertCell();
-            td2.textContent = prices[price][2] + " تومان";
+            if (prices[price][3] != 0){
+                let pastPrice = prices[price][2];
+                let discount = prices[price][3];
+                let newPrice = pastPrice * (100 - discount) / 100;
+                td2.textContent = strikeThrough(String(pastPrice)) + " " + newPrice + " تومان";
+            }
+            else {
+                td2.textContent = prices[price][2] + " تومان";
+            }
         }
         const priceTable = document.getElementById(`price-table-${formNum}`);
         priceTable.innerHTML = "";
@@ -192,10 +208,11 @@
         for (let price in prices) {
             if (number >= prices[price][0] && number <= prices[price][1]) {
                 unitPrice = prices[price][2];
+                discount = prices[price][3];
                 break;
             }
         }
-        itemPrice = unitPrice * number;
+        itemPrice = unitPrice * (100 - discount)/100 * number;
         itemPriceElement = document.getElementById(`item-price-${formNum}`);
         itemPriceElement.innerHTML = `قیمت این آیتم: ${itemPrice} هزار تومان`;
         itemPriceElement.setAttribute("data-value", itemPrice);
