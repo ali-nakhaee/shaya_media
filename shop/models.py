@@ -61,6 +61,7 @@ class Order(models.Model):
     purchase_date = models.DateTimeField(default=timezone.now)
     tracking_code = models.IntegerField(null=True)
     price = models.IntegerField()
+    description = models.TextField(max_length=300, null=True)
 
     PENDING = 0
     ACCEPTED = 1

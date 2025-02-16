@@ -59,6 +59,12 @@
         </div>
         </div>
         {% endfor %}
+    <div class="row" id="description-row">
+        <div class="mb-3">
+            <label for="order-description" class="form-label">توضیحات سفارش</label>
+            <input type="text" class="form-control" name="order-description">
+          </div>
+    </div>
     <div class="row" id="last-row">
         <div class="col-sm-6">
             <button id="add-form" type="button" class="save btn btn-primary">اضافه کردن آیتم</button>
@@ -76,7 +82,7 @@
 
     let itemForm = document.querySelectorAll(".item-form")
     let container = document.querySelector("#form-container")
-    let lastRow = document.querySelector("#last-row")
+    let descriptiontRow = document.querySelector("#description-row")
     let addButton = document.querySelector("#add-form")
     let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
     let formNum = itemForm.length - 1;
@@ -93,7 +99,7 @@
         newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`);
         newForm.innerHTML = newForm.innerHTML.replace(priceTableRegex, `price-table-${formNum}`);
         newForm.innerHTML = newForm.innerHTML.replace(itemPriceRegex, `item-price-${formNum}`);
-        container.insertBefore(newForm, lastRow);
+        container.insertBefore(newForm, descriptiontRow);
 
         const subjectField = document.getElementById(`id_form-${formNum}-subject`);
         subjectField.setAttribute("disabled", "disabled");
