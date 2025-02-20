@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     # My apps
     "users",
     "blog",
-    "shop",
+    "shop.apps.ShopConfig",
 
     # Third party apps
     "debug_toolbar",

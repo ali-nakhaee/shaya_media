@@ -9,9 +9,11 @@ from unidecode import unidecode
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
-from django.http import Http404
+from django.utils.decorators import method_decorator
+from django.http import Http404, HttpResponseForbidden
 
 from . import forms
 
@@ -108,3 +110,15 @@ class Register(View):
             return redirect('blog:post_list')
         else:
             print(form.errors)
+
+
+@method_decorator(login_required, name='dispatch')
+class UserSetting(View):
+    """ Change email address and phone number for admin user """
+    def get(self, request):
+        if not request.user.is_staff:
+            return HttpResponseForbidden("You do not have permission to view this resource.")
+        form = forms.EmailPhoneForm()
+        context = {'form': form}
+        return render(request, 'users/user_setting.html', context)
+    

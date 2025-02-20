@@ -143,7 +143,7 @@ class Cart(View):
     def post(self, request):
         ItemFormSet = formset_factory(ItemForm)
         formset = ItemFormSet(request.POST)
-        order_description = request.POST.get('order-description', '')
+        order_description = request.POST.get('order-description', ' ')
         if formset.is_valid():
             order = Order.objects.create(buyer=request.user, price=0, description=order_description)
             order_price = 0
@@ -214,3 +214,4 @@ class AllOrders(PermissionRequiredMixin, View):
             messages.success(request, 'وضعیت سفارش تغییر کرد.')
         return redirect("shop:all_orders")
 
+            

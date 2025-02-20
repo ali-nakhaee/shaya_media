@@ -33,3 +33,7 @@ class SignupForm(UserCreationForm):
         fields = ('username', 'first_name', 'last_name', 'phone_number')
         labels = {'username': 'نام کاربری', 'first_name': 'نام', 'last_name': 'نام خانوادگی'}
 
+
+class EmailPhoneForm(forms.Form):
+    email = forms.CharField(max_length=150, label=_("ایمیل"))
+    phone_number = forms.CharField(max_length=150, label=_("شماره همراه"))
