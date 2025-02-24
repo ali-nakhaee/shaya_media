@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
 
+from .models import User
 
 class LoginForm(forms.Form):
     phone_number = forms.CharField(max_length=150, label=_("شماره همراه"))
@@ -34,6 +35,13 @@ class SignupForm(UserCreationForm):
         labels = {'username': 'نام کاربری', 'first_name': 'نام', 'last_name': 'نام خانوادگی'}
 
 
-class EmailPhoneForm(forms.Form):
-    email = forms.CharField(max_length=150, label=_("ایمیل"))
-    phone_number = forms.CharField(max_length=150, label=_("شماره همراه"))
+class UserSettingsForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('phone_number', 'receive_sms', 'email', 'receive_email')
+        labels = {
+            'phone_number': 'شماره همراه',
+            'receive_sms': 'دریافت پیامک',
+            'email': 'ایمیل',
+            'receive_email': 'دریافت ایمیل',
+        }

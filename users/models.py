@@ -1,5 +1,10 @@
 """ users.models file """
 
+import random
+import hashlib
+import string
+from datetime import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group
 from django.utils.translation import gettext_lazy as _
@@ -36,6 +41,9 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=30, null=True, blank=True)
     last_name = models.CharField(max_length=30, null=True, blank=True)
 
+    receive_email = models.BooleanField(default=True)
+    receive_sms = models.BooleanField(default=True)
+
     VIEWER = "VIEWER"
     BLOGGER = "BLOGGER"
     ROLE_CHOICES = (
@@ -55,4 +63,23 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.phone_number
-            
+    
+    def make_temporary_password(self):
+        random_number = random.randint(1000, 9999)
+        salt = ''.join(random.choices(string.ascii_letters, k=10))
+        hash_object = hashlib.sha256((str(random_number) + salt).encode('utf-8'))  
+        hex_dig = hash_object.hexdigest()
+        self.temporary_password = hex_dig
+        self.salt = salt
+        self.password_generation_time = timezone.now()
+        self.save()
+        return random_number
+    
+    def check_temporary_password(self, form_password):
+        hash_object = hashlib.sha256((str(form_password) + self.salt).encode('utf-8'))
+        hex_dig = hash_object.hexdigest()
+        delta_time = (datetime.now().astimezone() - self.password_generation_time).total_seconds()
+        if (self.temporary_password == hex_dig) and (delta_time < 120):     # Check password and its generation time
+            return True
+        else:
+            return False
