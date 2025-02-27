@@ -33,7 +33,10 @@ class User(AbstractUser):
 
     password = models.CharField(max_length=20, null=True, blank=True)
 
-    phone_number = models.CharField(max_length=30, unique=True)
+    phone_number = models.CharField(max_length=30, unique=True,
+                                    error_messages={"unique":"با این شماره اکانت دیگری وجود دارد.",
+                                                    },
+                                    )
     temporary_password = models.CharField(max_length=200)
     password_generation_time = models.DateTimeField(default=timezone.now)
     salt = models.CharField(max_length=50)
