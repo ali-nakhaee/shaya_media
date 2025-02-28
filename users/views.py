@@ -122,20 +122,23 @@ class UserSetting(View):
     def post(self, request):
         form = forms.UserSettingsForm(instance=request.user, data=request.POST)
         user = User.objects.get(id=request.user.id)
+        previous_phone_number = user.phone_number
         if form.is_valid():
             #check if changed!
             new_phone_number = unidecode(form.cleaned_data['phone_number'])
-            if user.phone_number == new_phone_number:
+            if previous_phone_number == new_phone_number:
                 form.save()
                 messages.success(request, "اطلاعات شما با موفقیت تغییر کرد.")
                 return redirect('users:user_settings')
             else:
+                """ The phone number has changed. Need to verify new number."""
                 user.email = form.cleaned_data["email"]
                 user.receive_sms = form.cleaned_data["receive_sms"]
                 user.receive_email = form.cleaned_data["receive_email"]
+                user.phone_number = previous_phone_number   # This line is necessary to prevent save new phone number in save method.
                 user.save()
                 request.session['change_phone_number'] = True
-                request.session['previous_phone_number'] = user.phone_number
+                request.session['previous_phone_number'] = previous_phone_number
                 request.session['phone_number'] = new_phone_number
                 request.session['next'] = "users:user_settings"
                 random_number = user.make_temporary_password()
@@ -143,7 +146,7 @@ class UserSetting(View):
                 messages.info(request, f"برای تغییر شماره همراه، پیامک ارسالی به شماره {new_phone_number} را وارد کنید.")
                 return redirect('users:check_password')
         else:
-            print(form.errors)
-            return redirect('users:user_settings')
+            context = {'form': form}
+            return render(request, 'users/user_setting.html', context)
 
 
