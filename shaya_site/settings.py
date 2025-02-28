@@ -136,3 +136,12 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'users.backends.PhoneNumberAuthBackend',
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False

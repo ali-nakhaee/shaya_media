@@ -47,6 +47,8 @@ class User(AbstractUser):
     receive_email = models.BooleanField(default=True)
     receive_sms = models.BooleanField(default=True)
 
+    is_admin = models.BooleanField(default=False)
+
     VIEWER = "VIEWER"
     BLOGGER = "BLOGGER"
     ROLE_CHOICES = (
