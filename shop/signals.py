@@ -11,7 +11,7 @@ User = get_user_model()
 @receiver(post_save, sender=Order)
 def send_email_to_admin(sender, instance, created, **kwargs):
     """ Function for sending alert email to admin after customer make a new order. """
-    if created:
+    """if created:
         subject = "سفارش جدید"
         message = "سلام. سفارش جدیدی در سایت ثبت شده است."
         admin_emails = list(User.objects.filter(is_admin=True).values_list('email', flat=True))
@@ -22,3 +22,4 @@ def send_email_to_admin(sender, instance, created, **kwargs):
             admin_emails,
             fail_silently=False,
         )
+        print(f"emial sent to {admin_emails}")"""

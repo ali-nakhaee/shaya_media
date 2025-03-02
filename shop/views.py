@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.views import View
 from django.http import Http404
@@ -7,9 +8,13 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Prefetch
+from django.contrib.auth import get_user_model
 
 from .models import Price, Order, Item, Type, Subject
 from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemFormSet, ItemForm, OrderStatusForm
+from .tasks import send_email_task
+
+User = get_user_model()
 
 class Pricing(View):
 
@@ -177,6 +182,17 @@ class Cart(View):
             order.price = order_price
             order.save()
             messages.success(request, 'سفارش شما ایجاد شد.')
+            subject = "سفارش جدید"
+            message = "سلام. سفارش جدیدی در سایت ثبت شده است. ارسال شده با redis."
+            admin_emails = list(User.objects.filter(is_admin=True).values_list('email', flat=True))
+            send_email_task.delay(
+                subject,
+                message,
+                settings.EMAIL_HOST_USER,
+                admin_emails,
+                fail_silently=False,
+            )
+            print(f"emial sent to {admin_emails}")
         return redirect("shop:orders")
     
 

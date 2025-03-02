@@ -28,3 +28,6 @@ db.sqlite3
 
 .idea
 
+# Redis
+dump.rdb
+
