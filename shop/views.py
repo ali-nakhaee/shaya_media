@@ -228,6 +228,19 @@ class AllOrders(PermissionRequiredMixin, View):
             order.status = form.cleaned_data['status']
             order.save()
             messages.success(request, 'وضعیت سفارش تغییر کرد.')
+            order_status = order.get_order_status(int(form.cleaned_data['status']))
+            subject = "تغییر وضعیت سفارش"
+            message = f"وضعیت سفارش شما به «{order_status}» تغییر کرد."
+            buyer_email = [order.buyer.email, ]
+            if order.buyer.receive_email:
+                send_email_task.delay(
+                    subject,
+                    message,
+                    settings.EMAIL_HOST_USER,
+                    buyer_email,
+                    fail_silently=False,
+                )
+
         return redirect("shop:all_orders")
 
             

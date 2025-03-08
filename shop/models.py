@@ -61,7 +61,7 @@ class Order(models.Model):
     purchase_date = models.DateTimeField(default=timezone.now)
     tracking_code = models.IntegerField(null=True)
     price = models.IntegerField()
-    description = models.TextField(max_length=300, null=True)
+    description = models.TextField(max_length=300, null=True, blank=True)
 
     PENDING = 0
     ACCEPTED = 1
@@ -83,6 +83,9 @@ class Order(models.Model):
         super().save(*args, **kwargs)
         tracking_code = int(str(self.id * int(config('multiplication_value'))), base=int(config('base_value'))) + int(config('addition_value'))
         Order.objects.filter(id=self.id).update(tracking_code=tracking_code)
+    
+    def get_order_status(self, status_num): # Only for all_orders View. Need to change.
+        return self.STATUS_CHOICES[status_num][1]
 
 
 class Item(models.Model):
