@@ -77,6 +77,7 @@ class Order(models.Model):
         (REJECTED, "رد شده"),
     )
     status = models.SmallIntegerField(choices=STATUS_CHOICES, default=PENDING)
+    ordered_by_admin = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         self.tracking_code = 1

@@ -99,9 +99,9 @@ class EditPrice(View):
 
 
 @method_decorator(login_required, name='dispatch')
-class Cart(View):
+class BaseCart(View):
 
-    def get(self, request):
+    def get_cart_items(self):
         formset = formset_factory(ItemForm, extra=1)
         units = {}  # {'type.id': 'type.unit'}      Ex: {'1': 'hour'}
         subjects = {}   # {'type.id': [subjects_ids]}       Ex: {'1': [1, 4, 5]}
@@ -142,15 +142,27 @@ class Cart(View):
             'subject_ids': subject_ids,
             'prices': prices,
         }
-        
-        return render(request, "shop/cart.html", context)
+        return context
+    
+    def send_email_to_admins(self):
+        subject = "سفارش جدید"
+        message = "سلام. سفارش جدیدی در سایت ثبت شده است. ارسال شده با redis."
+        admin_emails = list(User.objects.filter(is_admin=True).values_list('email', flat=True))
+        send_email_task.delay(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            admin_emails,
+            fail_silently=False,
+        )
+        print(f"emial sent to {admin_emails}")
 
-    def post(self, request):
+    def make_order(self, request, customer):
         ItemFormSet = formset_factory(ItemForm)
         formset = ItemFormSet(request.POST)
         order_description = request.POST.get('order-description', ' ')
         if formset.is_valid():
-            order = Order.objects.create(buyer=request.user, price=0, description=order_description)
+            order = Order.objects.create(buyer=customer, price=0, description=order_description)
             order_price = 0
             print(formset.cleaned_data)
             for form in formset:
@@ -182,19 +194,27 @@ class Cart(View):
             order.price = order_price
             order.save()
             messages.success(request, 'سفارش شما ایجاد شد.')
-            subject = "سفارش جدید"
-            message = "سلام. سفارش جدیدی در سایت ثبت شده است. ارسال شده با redis."
-            admin_emails = list(User.objects.filter(is_admin=True).values_list('email', flat=True))
-            send_email_task.delay(
-                subject,
-                message,
-                settings.EMAIL_HOST_USER,
-                admin_emails,
-                fail_silently=False,
-            )
-            print(f"emial sent to {admin_emails}")
-        return redirect("shop:orders")
+            self.send_email_to_admins()
+            return request
+        return None
+
     
+
+@method_decorator(login_required, name='dispatch')
+class CartByCustomer(BaseCart):
+    def get(self, request):
+        return render(request, "shop/cart.html", self.get_cart_items())
+    
+    def post(self, request):
+        request = self.make_order(request, request.user)
+        return redirect("shop:orders")
+
+
+
+@method_decorator(login_required, name='dispatch')
+class CartByAdmin(BaseCart):
+    pass
+
 
 @method_decorator(login_required, name='dispatch')
 class Orders(View):
@@ -228,11 +248,11 @@ class AllOrders(PermissionRequiredMixin, View):
             order.status = form.cleaned_data['status']
             order.save()
             messages.success(request, 'وضعیت سفارش تغییر کرد.')
-            order_status = order.get_order_status(int(form.cleaned_data['status']))
-            subject = "تغییر وضعیت سفارش"
-            message = f"وضعیت سفارش شما به «{order_status}» تغییر کرد."
-            buyer_email = [order.buyer.email, ]
             if order.buyer.receive_email:
+                order_status = order.get_order_status(int(form.cleaned_data['status']))
+                subject = "تغییر وضعیت سفارش"
+                message = f"وضعیت سفارش شما به «{order_status}» تغییر کرد."
+                buyer_email = [order.buyer.email, ]
                 send_email_task.delay(
                     subject,
                     message,
@@ -243,4 +263,3 @@ class AllOrders(PermissionRequiredMixin, View):
 
         return redirect("shop:all_orders")
 
-            

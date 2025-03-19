@@ -1,9 +1,5 @@
 """ users.views """
 
-import random
-import hashlib
-import string
-from datetime import datetime
 from unidecode import unidecode
 
 from django.views import View
@@ -11,7 +7,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.http import Http404, HttpResponseForbidden
 
@@ -135,8 +130,8 @@ class UserSetting(View):
                 user.email = form.cleaned_data["email"]
                 user.receive_sms = form.cleaned_data["receive_sms"]
                 user.receive_email = form.cleaned_data["receive_email"]
-                user.phone_number = previous_phone_number   # This line is necessary to prevent save new phone number in save method.
-                user.save()
+                user.save(update_fields=['email', 'receive_sms', 'receive_email'])
+                # The line above this line (update_fields) is necessary to prevent save new phone number in save method.
                 request.session['change_phone_number'] = True
                 request.session['previous_phone_number'] = previous_phone_number
                 request.session['phone_number'] = new_phone_number
