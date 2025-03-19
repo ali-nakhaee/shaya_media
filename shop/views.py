@@ -162,7 +162,7 @@ class BaseCart(View):
         formset = ItemFormSet(request.POST)
         order_description = request.POST.get('order-description', ' ')
         if formset.is_valid():
-            order = Order.objects.create(buyer=customer, price=0, description=order_description)
+            order = Order.objects.create(customer=customer, price=0, description=order_description)
             order_price = 0
             print(formset.cleaned_data)
             for form in formset:
@@ -220,7 +220,7 @@ class CartByAdmin(BaseCart):
 class Orders(View):
     """ Show orders of specific user """
     def get(self, request):
-        orders = Order.objects.filter(buyer=request.user).order_by('-purchase_date').prefetch_related(
+        orders = Order.objects.filter(customer=request.user).order_by('-purchase_date').prefetch_related(
             Prefetch('items', queryset=Item.objects.select_related('type', 'subject', 'level'))
         )
         return render(request, 'shop/orders.html', {'orders': orders})
@@ -231,7 +231,7 @@ class AllOrders(PermissionRequiredMixin, View):
     permission_required = 'shop.change_order_status'
 
     def get(self, request):
-        orders = Order.objects.all().order_by('status').select_related('buyer').prefetch_related(
+        orders = Order.objects.all().order_by('status').select_related('customer').prefetch_related(
             Prefetch('items', queryset=Item.objects.select_related('type', 'subject', 'level'))
         )
         form = OrderStatusForm()
@@ -248,16 +248,16 @@ class AllOrders(PermissionRequiredMixin, View):
             order.status = form.cleaned_data['status']
             order.save()
             messages.success(request, 'وضعیت سفارش تغییر کرد.')
-            if order.buyer.receive_email:
+            if order.customer.receive_email:
                 order_status = order.get_order_status(int(form.cleaned_data['status']))
                 subject = "تغییر وضعیت سفارش"
                 message = f"وضعیت سفارش شما به «{order_status}» تغییر کرد."
-                buyer_email = [order.buyer.email, ]
+                customer_email = [order.customer.email, ]
                 send_email_task.delay(
                     subject,
                     message,
                     settings.EMAIL_HOST_USER,
-                    buyer_email,
+                    customer_email,
                     fail_silently=False,
                 )
 

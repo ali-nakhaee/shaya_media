@@ -57,7 +57,7 @@ class Order(models.Model):
         permissions = [
             ("change_order_status", "Can change the status of orders"),
         ]
-    buyer = models.ForeignKey(User, on_delete=models.PROTECT)
+    customer = models.ForeignKey(User, on_delete=models.PROTECT)
     purchase_date = models.DateTimeField(default=timezone.now)
     tracking_code = models.IntegerField(null=True)
     price = models.IntegerField()

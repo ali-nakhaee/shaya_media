@@ -33,7 +33,7 @@ class ItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'buyer', 'purchase_date', 'status', 'price']
-    list_display_links = ['id', 'buyer', 'purchase_date']
+    list_display = ['id', 'customer', 'purchase_date', 'status', 'price']
+    list_display_links = ['id', 'customer', 'purchase_date']
     inlines = [ItemInline, ]
 
