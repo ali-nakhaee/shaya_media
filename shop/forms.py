@@ -99,7 +99,7 @@ class OrderStatusForm(forms.Form):
 
 class CustomerChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return f"{obj.phone_number} - {obj.get_full_name()}"
+        return f"{obj.phone_number} - {obj.get_full_name()} - {obj.admin_description}"
 
 class SelectCustomerForm(forms.Form):
     customer = CustomerChoiceField(queryset=User.objects.all(),

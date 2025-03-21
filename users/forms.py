@@ -45,3 +45,13 @@ class UserSettingsForm(forms.ModelForm):
             'email': 'ایمیل',
             'receive_email': 'دریافت ایمیل',
         }
+
+
+class AddUserByAdminForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('phone_number', 'admin_description')
+        labels = {
+            'phone_number': 'شماره همراه',
+            'admin_description': 'توضیحات (صرفا توسط ادمین مشاهده می‌شود)',
+        }

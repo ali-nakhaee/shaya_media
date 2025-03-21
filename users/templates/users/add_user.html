@@ -1,0 +1,34 @@
+{% extends "blog/base.html" %}
+
+
+{% block page_header %}
+<div class="mx-auto text-center">
+  <h2>افزودن کاربر</h2>
+</div>
+{% endblock page_header %}
+
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <div class="container-fluid p-0">
+    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert" >
+      <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="True">&times;</span>
+      </button>
+      {{ message }}
+    </div>
+  </div>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form method="POST" class="post-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" name="add-user-form" class="save btn btn-secondary">افزودن کاربر</button>
+</form>
+
+
+{% endblock content %}

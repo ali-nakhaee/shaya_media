@@ -145,5 +145,19 @@ class UserSetting(View):
             return render(request, 'users/user_setting.html', context)
 
 
+# need to add permission
+@method_decorator(login_required, name='dispatch')
 class AddUser(View):
-    pass
+    def get(self, request):
+        form = forms.AddUserByAdminForm()
+        context = {'form': form}
+        return render(request, 'users/add_user.html', context)
+    
+    def post(self, request):
+        form = forms.AddUserByAdminForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'کاربر با موفقیت اضافه شد.')
+        else:
+            messages.error(request, form.errors)
+        return redirect('shop:cart_by_admin')

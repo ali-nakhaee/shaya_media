@@ -48,6 +48,7 @@ class User(AbstractUser):
     receive_sms = models.BooleanField(default=True)
 
     is_admin = models.BooleanField(default=False)
+    admin_description = models.CharField(max_length=100, blank=True, null=True, default=None)   # A short description of the customer that is only shown to the admin.
 
     VIEWER = "VIEWER"
     BLOGGER = "BLOGGER"
