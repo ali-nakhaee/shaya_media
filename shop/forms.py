@@ -2,6 +2,7 @@
 
 from django import forms
 
+from users.models import User
 from .models import Type, Subject, Level, Price, Item, Order
 
 class TypeForm(forms.ModelForm):
@@ -94,4 +95,14 @@ class OrderStatusForm(forms.Form):
     status = forms.ChoiceField(choices=Order.STATUS_CHOICES,
                                label='وضعیت',
                                )
+
+
+class CustomerChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return f"{obj.phone_number} - {obj.get_full_name()}"
+
+class SelectCustomerForm(forms.Form):
+    customer = CustomerChoiceField(queryset=User.objects.all(),
+                                      label="انتخاب مشتری",
+                                      )
 

@@ -9,6 +9,21 @@
 {% block content %}
 <form id="form-container" method="POST" class="post-form">
     {% csrf_token %}
+
+    {% if by_admin %}
+        <div class="form">
+            <div class="row">
+                <div class="col-sm-6">
+                    {{ select_customer_form.as_p }}
+                </div>
+                <div class="col-sm-6">
+                    <a class="nav-link" href="{% url 'users:add_user' %}">افزودن کاربر</a>
+                </div>
+            </div>
+        </div>
+        <hr>
+    {% endif %}
+
     {{ formset.management_form }}
         {% for form in formset %}
         <div class="item-form">

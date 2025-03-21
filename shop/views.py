@@ -11,7 +11,7 @@ from django.db.models import Prefetch
 from django.contrib.auth import get_user_model
 
 from .models import Price, Order, Item, Type, Subject
-from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemFormSet, ItemForm, OrderStatusForm
+from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemFormSet, ItemForm, OrderStatusForm, SelectCustomerForm
 from .tasks import send_email_task
 
 User = get_user_model()
@@ -157,7 +157,7 @@ class BaseCart(View):
         )
         print(f"emial sent to {admin_emails}")
 
-    def make_order(self, request, customer):
+    def make_order(self, request, customer, ordered_by_admin):
         ItemFormSet = formset_factory(ItemForm)
         formset = ItemFormSet(request.POST)
         order_description = request.POST.get('order-description', ' ')
@@ -192,30 +192,43 @@ class BaseCart(View):
                 )
                 order_price += item_price
             order.price = order_price
+            if ordered_by_admin:
+                order.ordered_by_admin = True
             order.save()
             messages.success(request, 'سفارش شما ایجاد شد.')
-            self.send_email_to_admins()
-            return request
-        return None
+            if not ordered_by_admin:
+                self.send_email_to_admins()
+            return True
+        return False
 
     
-
 @method_decorator(login_required, name='dispatch')
 class CartByCustomer(BaseCart):
     def get(self, request):
         return render(request, "shop/cart.html", self.get_cart_items())
     
     def post(self, request):
-        request = self.make_order(request, request.user)
+        self.make_order(request, customer=request.user, ordered_by_admin=False)
         return redirect("shop:orders")
-
 
 
 @method_decorator(login_required, name='dispatch')
 class CartByAdmin(BaseCart):
-    pass
+    def get(self, request):
+        context = self.get_cart_items()
+        context['by_admin'] = True
+        context['select_customer_form'] = SelectCustomerForm()
+        return render(request, "shop/cart.html", context)
+    
+    def post(self, request):
+        try:
+            customer = User.objects.get(id=request.POST.get('customer'))
+        except:
+            raise Http404
+        self.make_order(request, customer=customer, ordered_by_admin=True)
+        return redirect("shop:all_orders")
 
-
+    
 @method_decorator(login_required, name='dispatch')
 class Orders(View):
     """ Show orders of specific user """

@@ -145,3 +145,5 @@ class UserSetting(View):
             return render(request, 'users/user_setting.html', context)
 
 
+class AddUser(View):
+    pass
