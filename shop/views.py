@@ -212,9 +212,10 @@ class CartByCustomer(BaseCart):
         return redirect("shop:orders")
 
 
-# need to add permission check
 @method_decorator(login_required, name='dispatch')
-class CartByAdmin(BaseCart):
+class CartByAdmin(PermissionRequiredMixin, BaseCart):
+    permission_required = 'shop.add_order'
+
     def get(self, request):
         context = self.get_cart_items()
         context['by_admin'] = True

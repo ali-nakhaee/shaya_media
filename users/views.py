@@ -6,6 +6,7 @@ from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.http import Http404, HttpResponseForbidden
@@ -145,9 +146,10 @@ class UserSetting(View):
             return render(request, 'users/user_setting.html', context)
 
 
-# need to add permission
 @method_decorator(login_required, name='dispatch')
-class AddUser(View):
+class AddUser(PermissionRequiredMixin, View):
+    permission_required = "users.add_user"
+
     def get(self, request):
         form = forms.AddUserByAdminForm()
         context = {'form': form}
