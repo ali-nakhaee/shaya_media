@@ -12,4 +12,5 @@ urlpatterns = [
     path('check_password/', views.CheckPassword.as_view(), name='check_password'),
     path('user-settings/', views.UserSetting.as_view(), name='user_settings'),
     path('add-user/', views.AddUser.as_view(), name='add_user'),
+    path('all-users/', views.AllUsers.as_view(), name='all_users'),
 ]

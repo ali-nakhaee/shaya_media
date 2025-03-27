@@ -55,3 +55,12 @@ class AddUserByAdminForm(forms.ModelForm):
             'phone_number': 'شماره همراه',
             'admin_description': 'توضیحات (صرفا توسط ادمین مشاهده می‌شود)',
         }
+
+
+class ChangeAdminDescriptionForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('admin_description', )
+        labels = {
+            'admin_description': 'یادداشت ادمین',
+        }

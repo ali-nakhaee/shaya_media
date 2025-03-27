@@ -163,3 +163,14 @@ class AddUser(PermissionRequiredMixin, View):
         else:
             messages.error(request, form.errors)
         return redirect('shop:cart_by_admin')
+
+
+@method_decorator(login_required, name='dispatch')
+class AllUsers(View):
+    def get(self, request):
+        users = User.objects.all().order_by('-date_joined')
+        context = {
+            'users': users,
+            'form': forms.ChangeAdminDescriptionForm()
+        }
+        return render(request, 'users/all_users.html', context)
