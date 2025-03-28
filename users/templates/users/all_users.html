@@ -42,7 +42,7 @@
                 <td>
                     <form method="POST" class="post-form">
                         {% csrf_token %}
-                        <input type="hidden" id="order_id" name="order_id" value="{{ user.id }}">
+                        <input type="hidden" id="user_id" name="user_id" value="{{ user.id }}">
                         <input type="text" name="admin_description" id="admin_description" value="{{ user.admin_description }}">
                         <button type="submit" name="admin-description-form" class="save btn btn-secondary">تغییر یادداشت</button>
                     </form>

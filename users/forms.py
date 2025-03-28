@@ -57,10 +57,6 @@ class AddUserByAdminForm(forms.ModelForm):
         }
 
 
-class ChangeAdminDescriptionForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ('admin_description', )
-        labels = {
-            'admin_description': 'یادداشت ادمین',
-        }
+class ChangeAdminDescriptionForm(forms.Form):
+    user_id = forms.IntegerField()
+    admin_description = forms.CharField()

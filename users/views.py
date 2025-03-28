@@ -174,3 +174,18 @@ class AllUsers(View):
             'form': forms.ChangeAdminDescriptionForm()
         }
         return render(request, 'users/all_users.html', context)
+
+    def post(self, request):
+        form = forms.ChangeAdminDescriptionForm(data=request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            try:
+                user = User.objects.get(id=form.cleaned_data['user_id'])
+            except User.DoesNotExist:
+                raise Http404
+            user.admin_description = form.cleaned_data['admin_description']
+            user.save(update_fields=['admin_description', ])
+            messages.success(request, 'یادداشت ادمین برای کاربر مدنظر تغییر کرد.')
+            
+        return redirect('users:all_users')
+
