@@ -166,7 +166,9 @@ class AddUser(PermissionRequiredMixin, View):
 
 
 @method_decorator(login_required, name='dispatch')
-class AllUsers(View):
+class AllUsers(PermissionRequiredMixin, View):
+    permission_required = "users.change_user"
+
     def get(self, request):
         users = User.objects.all().order_by('-date_joined')
         context = {

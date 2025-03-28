@@ -24,6 +24,7 @@
 </ul>
 {% endif %}
 
+<div class="table-responsive">
 <table class="table">
     <thead class="table-dark">
       <tr>
@@ -43,7 +44,7 @@
                     <form method="POST" class="post-form">
                         {% csrf_token %}
                         <input type="hidden" id="user_id" name="user_id" value="{{ user.id }}">
-                        <input type="text" name="admin_description" id="admin_description" value="{{ user.admin_description }}">
+                        <input type="text" name="admin_description" id="admin_description" value="{{ user.admin_description }}" size="25">
                         <button type="submit" name="admin-description-form" class="save btn btn-secondary">تغییر یادداشت</button>
                     </form>
                 </td>
@@ -51,5 +52,6 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
 
 {% endblock content %}
