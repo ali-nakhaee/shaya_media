@@ -10,6 +10,7 @@ venv/
 
 # Database
 db.sqlite3
+data.json
 
 # Static folder at project root
 /static/
