@@ -31,7 +31,7 @@ class User(AbstractUser):
         },
     )
 
-    password = models.CharField(max_length=20, null=True, blank=True)
+    password = models.CharField(max_length=200, null=True, blank=True)
 
     phone_number = models.CharField(max_length=30, unique=True,
                                     error_messages={"unique":"اکانت دیگری با این شماره وجود دارد.",
