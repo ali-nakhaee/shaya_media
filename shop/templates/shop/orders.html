@@ -1,5 +1,7 @@
 {% extends "blog/base.html" %}
 
+{% load tz %} 
+
 {% block page_header %}
 <div class="mx-auto text-center">
   <h2>تمام سفارش‌ها</h2>
@@ -95,7 +97,7 @@
         </div>
         <div class="row">
             <div class="col-6 col-sm-8">
-                تاریخ ثبت سفارش: {{ order.purchase_date }}
+                تاریخ ثبت سفارش: {{ order.purchase_date|timezone:"Asia/Tehran" }}
             </div>
             <div class="col-6 col-sm-4">
                 قیمت کل: {{ order.price }} تومان
