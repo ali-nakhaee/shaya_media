@@ -116,6 +116,14 @@ class EditPriceAPIView(APIView):
         serializer = PriceSerializer(price)
         data = serializer.data
         return Response(data, status.HTTP_200_OK)
+    
+    def post(self, request: Request, price_id):
+        price = self.get_object(price_id=price_id)
+        serializer = PriceSerializer(instance=price, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data={"message": "The price has been updated."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
 @method_decorator(login_required, name='dispatch')
