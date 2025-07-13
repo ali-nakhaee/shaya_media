@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     "shop.apps.ShopConfig",
 
     # Third party apps
+    "rest_framework",
+    # "core",
+    "corsheaders",
     "debug_toolbar",
 
     # Django apps
@@ -40,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -168,4 +172,16 @@ DATABASES = {
     }
 }
 
+# Rest framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
 
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}
+
+CORS_ORIGIN_ALLOW_ALL = True

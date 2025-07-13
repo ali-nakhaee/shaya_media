@@ -12,4 +12,5 @@ urlpatterns = [
     path('orders/', views.Orders.as_view(), name='orders'),
     path('all-orders/', views.AllOrders.as_view(), name='all_orders'),
     path('cart-by-admin/', views.CartByAdmin.as_view(), name='cart_by_admin'),
+    path('edit-price-api/<int:price_id>/', views.EditPriceAPIView.as_view(), name='edit_price_api'),
 ]

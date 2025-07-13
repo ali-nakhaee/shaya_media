@@ -10,9 +10,15 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Prefetch
 from django.contrib.auth import get_user_model
 
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.request import Request
+
 from .models import Price, Order, Item, Type, Subject
 from .forms import TypeForm, SubjectForm, LevelForm, PriceForm, ItemFormSet, ItemForm, OrderStatusForm, SelectCustomerForm
 from .tasks import send_email_task
+from .serializer import PriceSerializer
 
 User = get_user_model()
 
@@ -96,6 +102,20 @@ class EditPrice(View):
             form.save()
             messages.success(request, 'قیمت با موفقیت تغییر کرد.')
         return redirect("shop:pricing")
+
+class EditPriceAPIView(APIView):
+    def get_object(self, price_id):
+        try:
+            price = Price.objects.get(id=price_id)
+        except Price.DoesNotExist:
+            raise Http404
+        return price
+        
+    def get(self , request: Request, price_id):
+        price = self.get_object(price_id=price_id)
+        serializer = PriceSerializer(price)
+        data = serializer.data
+        return Response(data, status.HTTP_200_OK)
 
 
 @method_decorator(login_required, name='dispatch')
