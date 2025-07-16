@@ -29,7 +29,6 @@ INSTALLED_APPS = [
 
     # Third party apps
     "rest_framework",
-    # "core",
     "corsheaders",
     "debug_toolbar",
 
@@ -184,4 +183,6 @@ REST_FRAMEWORK = {
     ],
 }
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]

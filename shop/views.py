@@ -103,7 +103,9 @@ class EditPrice(View):
             messages.success(request, 'قیمت با موفقیت تغییر کرد.')
         return redirect("shop:pricing")
 
+
 class EditPriceAPIView(APIView):
+
     def get_object(self, price_id):
         try:
             price = Price.objects.get(id=price_id)
@@ -119,7 +121,7 @@ class EditPriceAPIView(APIView):
     
     def post(self, request: Request, price_id):
         price = self.get_object(price_id=price_id)
-        serializer = PriceSerializer(instance=price, data=request.data, partial=True)
+        serializer = PriceSerializer(instance=price, data=request.data, partial=False)
         if serializer.is_valid():
             serializer.save()
             return Response(data={"message": "The price has been updated."}, status=status.HTTP_200_OK)
